@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6e4e4fc705376343a3e65b25d94f0e2, type: 3}
+  m_Name: Test Terrain Tile
+  m_EditorClassIdentifier: 
+  m_Sprites:
+  - {fileID: -2860982009417361707, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: -8560909203809222747, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: -8314697479797604436, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: -2913927307954446974, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: 9158922217335370285, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: -38647862416911262, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: -3932762474534642510, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: -6537453368205885854, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: 1404196382344981941, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: -4637172546458061636, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: -1238933728272178944, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: -6337999885091750218, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: -5779282676337348671, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: 4519664136019108208, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
+  - {fileID: 8074338581418846440, guid: 4e794009527fa49a7a0e11880aaa3a50, type: 3}
