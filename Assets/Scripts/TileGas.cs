@@ -26,7 +26,8 @@ public class TileGas : MonoBehaviour
     //public bool isBlockGas = false;
 
     [Header("Визуализирование")]
-    public bool isNeedSmoke = false;
+    public bool isNeedSmoke = true;
+    public bool isNeedText = true;
     public GameObject smokeObject; //дым
     private SpriteRenderer smokeSprite;
     public Canvas canvasText;
@@ -161,6 +162,7 @@ public class TileGas : MonoBehaviour
             smokeObject.transform.SetParent(transform);
             //рендер спрайта
             smokeSprite = smokeObject.GetComponent<SpriteRenderer>();
+            isNeedSmoke = !isNeedSmoke; //отключаем необходимость
             UpdateSmoke();
         }
     }
@@ -170,17 +172,21 @@ public class TileGas : MonoBehaviour
     /// </summary>
     public void CreateText()
     {
-        //создание текста
-        Canvas canvObject = Instantiate(canvasText, transform.position, Quaternion.identity);
-        canvasText = canvObject;
-        canvasText.transform.SetParent(transform);
-        textObject = canvasText.GetComponentInChildren<Text>();
-        //canvasText.enabled = true;
+        if (isNeedText)
+        {
+            //создание текста
+            Canvas canvObject = Instantiate(canvasText, transform.position, Quaternion.identity);
+            canvasText = canvObject;
+            canvasText.transform.SetParent(transform);
+            textObject = canvasText.GetComponentInChildren<Text>();
+            //canvasText.enabled = true;
 
-        //данные текста
-        textObject.fontSize = 16;
-        textObject.color = Color.white;
-        UpdateText();
+            //данные текста
+            textObject.fontSize = 16;
+            textObject.color = Color.white;
+            isNeedText = !isNeedText; //отключаем необходимость
+            UpdateText();
+        }
     }
 
     ///<summary> 
@@ -188,7 +194,7 @@ public class TileGas : MonoBehaviour
     ///</summary>
     private void UpdateSmoke()//float r, float g, float b, float a)
     {
-        if (isNeedSmoke)
+        if (!isNeedSmoke)
         {
             smokeSprite.color = new Color32(
                 (byte)Mathf.Clamp(pressure, 0, 255),
@@ -204,16 +210,19 @@ public class TileGas : MonoBehaviour
 
     private void UpdateText()
     {
-        if (isActive)
+        if (!isNeedText)
         {
-            textObject.color = Color.white;
+            if (isActive)
+            {
+                textObject.color = Color.white;
+            }
+            else
+            {
+                textObject.color = Color.black;
+            }
+            text1 = Math.Round(pressure, 2).ToString();
+            textObject.text = $"P: {text1} kPa \n{text2}\n{text3}";
         }
-        else
-        {
-            textObject.color = Color.black;
-        }
-        text1 = Math.Round(pressure, 2).ToString();
-        textObject.text = $"P: {text1} kPa \n{text2}\n{text3}";
     }
 
     ///<summary>

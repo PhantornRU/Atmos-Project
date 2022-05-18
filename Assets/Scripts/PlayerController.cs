@@ -194,6 +194,12 @@ public class PlayerController : MonoBehaviour
                                 tilesArray.TileAdd(clickTilePosition, c_map);
 
                                 tilesArray.map[c_map].GetComponent<TilemapCollider2D>().ProcessTilemapChanges(); //Обновляем тайлмап коллайдер
+
+                                //отключаем дым под тайлом если он есть
+                                if (tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].smokeObject.activeInHierarchy == true)
+                                {
+                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].smokeObject.SetActive(false);
+                                }
                             }
                             break;
                         }
@@ -207,6 +213,12 @@ public class PlayerController : MonoBehaviour
                                 //tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y] = null;
                                 tilesArray.map[1].SetTile(clickTileSetPosition, null); //убирание тайла стены и его GameObject
                                 tilesArray.map[1].GetComponent<TilemapCollider2D>().ProcessTilemapChanges(); //Обновляем тайлмап коллайдер
+
+                                //отключаем дым под тайлом если он есть
+                                if (tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].smokeObject.activeInHierarchy == false)
+                                {
+                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].smokeObject.SetActive(true);
+                                }
                             }
                             else if (tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y] != null)
                             {

@@ -30,6 +30,8 @@ public class TileMapArray : MonoBehaviour
     public bool isNeedUpdateArray = false; //проверка, необходимо ли обновление или можно не выполнять метод UpdateArray()
     [SerializeField] int countActivate; //Счет невозможных тайлов для обновление
 
+    private bool isInitializeCompleted = false; //проверка на завершение инициализации
+
     public void Initialize(float _tick_time)
     {
         tick_time = _tick_time;
@@ -39,9 +41,11 @@ public class TileMapArray : MonoBehaviour
         TilesArrayCreate();
 
         //Визуализируем данные на сцене
-        TilesArrayCreateVisualization();
+        TilesArrayInitializeCreateVisualization();
 
         hashObjects = new HashSet<GameObject>();
+
+        isInitializeCompleted = true;
     }
 
     void FixedUpdate()
@@ -106,7 +110,7 @@ public class TileMapArray : MonoBehaviour
     /// <summary>
     /// Создание визуальной помощи в виде текста и дыма
     /// </summary>
-    private void TilesArrayCreateVisualization()
+    private void TilesArrayInitializeCreateVisualization()
     {
         //проверяем все объекты в слое пола
         foreach (Transform c_object in map[0].transform)
@@ -155,9 +159,13 @@ public class TileMapArray : MonoBehaviour
                     tilesGas[px, py] = c_object.GetComponent<TileGas>();
                     tilesGas[px, py].Initialize(GetComponent<TileMapArray>(), new Vector2Int(px, py), "TileFloor");
 
-                    //создаем визуальные вспомогательные объекты
-                    tilesGas[px, py].CreateSmoke(); //создаем объект дыма на клетке
-                    tilesGas[px, py].CreateText(); //создаем объект текста на клетке
+                    //проверка на инициализацию, чтобы не создавались объекты под стенами и стеклами
+                    if (isInitializeCompleted)
+                    {
+                        //создаем визуальные вспомогательные объекты
+                        tilesGas[px, py].CreateSmoke(); //создаем объект дыма на клетке
+                        tilesGas[px, py].CreateText(); //создаем объект текста на клетке
+                    }
                     break;
                 }
             case 1: //стены, окна
