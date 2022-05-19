@@ -17,6 +17,8 @@ public class TileMapArray : MonoBehaviour
     public TileGas[,] tilesGas; //массив газовых тайлов
     public TileBlock[,] tilesBlock; //массив блоковых тайлов - стены, стекло
     public TileDoor[,] tilesDoor; //массив объектов тайлов - двери
+    public Tile[,] tilesPipe; //массив объектов тайлов - трубы, их девайсы
+    public List<List<Vector3>> pipesNetwork; //список систем труб, внутри которых находятся входы труб
 
     HashSet<GameObject> hashObjects;
 
@@ -29,6 +31,12 @@ public class TileMapArray : MonoBehaviour
     [SerializeField] float tick_curr_time; //Текущее время
     public bool isNeedUpdateArray = false; //проверка, необходимо ли обновление или можно не выполнять метод UpdateArray()
     [SerializeField] int countActivate; //Счет невозможных тайлов для обновление
+
+    //Номера тайлмап
+    const int numberFloors = 0;
+    const int numberWallsAndWindows = 1;
+    const int numberDoors = 2;
+    const int numberPipes = 3;
 
     private bool isInitializeCompleted = false; //проверка на завершение инициализации
 
@@ -89,6 +97,7 @@ public class TileMapArray : MonoBehaviour
         tilesGas = new TileGas[bounds.size.x, bounds.size.y];
         tilesBlock = new TileBlock[bounds.size.x, bounds.size.y];
         tilesDoor = new TileDoor[bounds.size.x, bounds.size.y];
+        tilesPipe = new Tile[bounds.size.x, bounds.size.y];
 
         Debug.Log("Границы: " + bounds);
 
@@ -104,7 +113,64 @@ public class TileMapArray : MonoBehaviour
 
                 TileCheckMapAndAddToMatrix(px, py, c_map, c_object);
             }
-        }
+
+            //Тайлмапа труб
+            if (c_map == numberPipes)
+            {
+                pipesNetwork = new List<List<Vector3>>();
+                //List<Vector3> sortingPipesNetwork = new List<Vector3>();
+                Vector3[,] sortingPipesNetwork = new Vector3[bounds.xMax, bounds.yMax];
+                //pipesNetwork.Add(sortingPipesNetwork);
+
+                Vector3Int placeSort;// = sortingPipesNetwork.; //для запоминания выбора сортировки
+
+                for (int n = bounds.xMin; n < bounds.xMax; n++)
+                {
+                    for (int p = bounds.yMin; p < bounds.yMax; p++)
+                    {
+                        Vector3Int localPlace = (new Vector3Int(n, p, 0));
+                        Vector3 place = map[c_map].CellToWorld(localPlace);
+                        if (map[c_map].HasTile(localPlace))
+                        {
+                            //добавляем тайл в список
+                            //sortingPipesNetwork.Add(place);
+
+                            sortingPipesNetwork[localPlace.x, localPlace.y] = place;
+                            placeSort = localPlace;
+                        }
+                    }
+                }
+
+                //Vector3 placePast = sortingPipesNetwork[0];
+                //Debug.Log("Тестовый: " + placePast);
+                //Сортируем найденные объекты по сетям труб
+                do
+                {
+                    Vector3 placeLast = sortingPipesNetwork[placeSort.x, placeSort.y];
+                    for (int px = -1; px <= 1; px++)
+                    {
+                        for (int py = -1; py <= 1; py++)
+                        {
+                            if (sortingPipesNetwork[placeSort.x + px, placeSort.y + py] != null)
+                            {
+                                pipesNetwork.Add(sortingPipesNetwork[placeSort.x + px, placeSort.y + py]);
+                            }
+                        }
+                    }
+                    //Debug.Log("Тестовый: " + placePast);
+                    //sortingPipesNetwork.Clear();
+                    //foreach (Vector3 place in sortingPipesNetwork)
+                    //{
+                    //    if ()
+                    //}
+                }
+                while (sortingPipesNetwork.Count > 0);
+
+                //string test = "Тест тайлмапа: ";
+                //test += $"{_tile} name: {_tile.name}; ";
+                //Debug.Log(test);
+            }
+    }
     }
 
     /// <summary>
@@ -154,7 +220,7 @@ public class TileMapArray : MonoBehaviour
     {
         switch (c_map)
         {
-            case 0: //полы
+            case numberFloors: //полы
                 {
                     tilesGas[px, py] = c_object.GetComponent<TileGas>();
                     tilesGas[px, py].Initialize(GetComponent<TileMapArray>(), new Vector2Int(px, py), "TileFloor");
@@ -168,21 +234,21 @@ public class TileMapArray : MonoBehaviour
                     }
                     break;
                 }
-            case 1: //стены, окна
+            case numberWallsAndWindows: //стены, окна
                 {
                     tilesBlock[px, py] = c_object.GetComponent<TileBlock>(); //запоминаем компонент в массиве
                     tilesBlock[px, py].Initialize(GetComponent<TileMapArray>(), new Vector2Int(px, py), "TileBlock");
                     break;
                 }
-            case 2: //двери
+            case numberDoors: //двери
                 {
                     tilesDoor[px, py] = c_object.gameObject.GetComponent<TileDoor>(); //запоминаем объект в массиве
                     tilesDoor[px, py].InitializeDoor(GetComponent<TileMapArray>(), new Vector2Int(px, py), "TileDoor"); //запускаем обработчик дверей
                     break;
                 }
-            case 3: //трубы
+            case numberPipes: //девайсы к трубам
                 {
-                    Debug.Log($"Найден тайл трубы: {c_object}, {c_object.name} [{px};{py}]");
+                    Debug.Log($"Найден девайс тайла трубы: {c_object}, {c_object.name} [{px};{py}]");
                     break;
                 }
         }
