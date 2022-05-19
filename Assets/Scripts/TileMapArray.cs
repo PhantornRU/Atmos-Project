@@ -18,7 +18,7 @@ public class TileMapArray : MonoBehaviour
     public TileBlock[,] tilesBlock; //массив блоковых тайлов - стены, стекло
     public TileDoor[,] tilesDoor; //массив объектов тайлов - двери
     public Tile[,] tilesPipe; //массив объектов тайлов - трубы, их девайсы
-    public List<List<Vector3>> pipesNetwork; //список систем труб, внутри которых находятся входы труб
+    public List<Vector3[,]> pipesNetwork; //список систем массива труб, внутри которых находятся входы труб
 
     HashSet<GameObject> hashObjects;
 
@@ -85,11 +85,14 @@ public class TileMapArray : MonoBehaviour
         //!!!!!Примерно такое же должно быть обновление границ, но с переносом всех текущих массивов данных
     }
 
+    [SerializeField] List<Vector3> pipesNetwork2; //тест
+
     /// <summary>
     /// Создание массивов тайлов и определение границ
     /// </summary>
     private void TilesArrayCreate()
     {
+        pipesNetwork2 = new List<Vector3>(); //тест  !!!!ПОТОМ УБРАТЬ!!!
 
         TilesBoundsCreate();
 
@@ -117,60 +120,103 @@ public class TileMapArray : MonoBehaviour
             //Тайлмапа труб
             if (c_map == numberPipes)
             {
-                pipesNetwork = new List<List<Vector3>>();
                 //List<Vector3> sortingPipesNetwork = new List<Vector3>();
+                pipesNetwork = new List<Vector3[,]>();
+                int zMax = 10; //максимум количества систем, временное значение
                 Vector3[,] sortingPipesNetwork = new Vector3[bounds.xMax, bounds.yMax];
+                Vector3[,,] sortingSavedPipesNetwork = new Vector3[bounds.xMax, bounds.yMax, zMax];
                 //pipesNetwork.Add(sortingPipesNetwork);
 
-                Vector3Int placeSort;// = sortingPipesNetwork.; //для запоминания выбора сортировки
+                Vector3Int placeSort = new Vector3Int(0, 0, 0);// = sortingPipesNetwork.; //для запоминания выбора сортировки
 
                 for (int n = bounds.xMin; n < bounds.xMax; n++)
                 {
                     for (int p = bounds.yMin; p < bounds.yMax; p++)
                     {
-                        Vector3Int localPlace = (new Vector3Int(n, p, 0));
+                        Vector3Int localPlace = new Vector3Int(n, p, 0);
                         Vector3 place = map[c_map].CellToWorld(localPlace);
+                        Vector3Int tilePosition = new Vector3Int((int)(place.x + bounds.xMax + 1),
+                                                                      (int)(place.y + bounds.yMax), 0);
+
                         if (map[c_map].HasTile(localPlace))
                         {
-                            //добавляем тайл в список
-                            //sortingPipesNetwork.Add(place);
+                            sortingPipesNetwork[tilePosition.x, tilePosition.y] = tilePosition;
+                            placeSort = tilePosition;
 
-                            sortingPipesNetwork[localPlace.x, localPlace.y] = place;
-                            placeSort = localPlace;
+                            pipesNetwork2.Add(tilePosition); //добавляем наш тайл в список  !!!!ПОТОМ УБРАТЬ!!!
                         }
                     }
                 }
 
-                //Vector3 placePast = sortingPipesNetwork[0];
-                //Debug.Log("Тестовый: " + placePast);
+
                 //Сортируем найденные объекты по сетям труб
+                bool checkNeedExit = false;
                 do
                 {
                     Vector3 placeLast = sortingPipesNetwork[placeSort.x, placeSort.y];
+                    int zSaved = 0;
                     for (int px = -1; px <= 1; px++)
                     {
+                        bool checkBreak = false;
                         for (int py = -1; py <= 1; py++)
                         {
-                            if (sortingPipesNetwork[placeSort.x + px, placeSort.y + py] != null)
+                            if (placeSort.x + px != 0 && placeSort.y + py != 0 //возможно надо было поставить ||
+                                && placeSort.x != 0 && placeSort.y != 0)
                             {
-                                pipesNetwork.Add(sortingPipesNetwork[placeSort.x + px, placeSort.y + py]);
+                                if (sortingPipesNetwork[placeSort.x + px, placeSort.y + py] != null)
+                                {
+                                    sortingSavedPipesNetwork[placeSort.x, placeSort.y, zSaved] = placeLast;
+                                    placeLast = sortingPipesNetwork[placeSort.x + px, placeSort.y + py];
+                                    pipesNetwork2.Remove(placeSort);
+
+                                    checkBreak = true; //выходим из проверки остальных позиций
+                                    break;
+                                }
+                                else
+                                {
+                                    //проверяем не пересекается ли он с другими слоями и не является ли их продолжением
+                                    //производим те же действия, но уже для каждого слоя
+                                    for (int pz = 0; pz <= zMax; pz++)
+                                    {
+                                        if (sortingSavedPipesNetwork[placeSort.x + px, placeSort.y + py, pz] != null)
+                                        {
+                                            sortingSavedPipesNetwork[placeSort.x, placeSort.y, pz] = placeLast;
+                                            placeLast = sortingSavedPipesNetwork[placeSort.x + px, placeSort.y + py, pz];
+                                            pipesNetwork2.Remove(placeSort);
+
+                                            checkBreak = true; //выходим из проверки остальных позиций
+                                            break;
+                                        }
+                                    }
+                                }
                             }
                         }
+                        if (checkBreak) break;
                     }
-                    //Debug.Log("Тестовый: " + placePast);
-                    //sortingPipesNetwork.Clear();
-                    //foreach (Vector3 place in sortingPipesNetwork)
-                    //{
-                    //    if ()
-                    //}
+
+                    //задаем что пора выходить
+                    if (pipesNetwork2.Count == 0)
+                    {
+                        checkNeedExit = true;
+                    }
                 }
-                while (sortingPipesNetwork.Count > 0);
+                while (!checkNeedExit);
+
+
+
+
+
+
+
+                //!!!!!По завершению все массивы переделываются в листы и добавляются в список
+
+                //List<Vector3> listLast = ;
 
                 //string test = "Тест тайлмапа: ";
                 //test += $"{_tile} name: {_tile.name}; ";
                 //Debug.Log(test);
             }
-    }
+        }
     }
 
     /// <summary>
