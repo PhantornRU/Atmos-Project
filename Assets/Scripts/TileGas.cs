@@ -192,15 +192,39 @@ public class TileGas : MonoBehaviour
     ///<summary> 
     ///обновление тайла дыма и смена цвета спрайта
     ///</summary>
-    private void UpdateSmoke()//float r, float g, float b, float a)
+    private void UpdateSmoke()
     {
         if (!isNeedSmoke)
         {
+            Vector3 rgbSmoke = new Vector3(); //значение для придания цвета
+            float t = pressure / 2000; //определяет значение от 0 до 1, если кратно 1000
+            int d1 = 10; //значение для деления нахождения диапазона между красно-желтого вектора
+            int d2 = 5; //значение для деления нахождения диапазона между желто-белого вектора
+            //Проверяем попадает ли под диапазон
+            if (t <= 1)
+            {   //от синего до красного
+                rgbSmoke = Vector3.Lerp(new Vector3Int(0,0,255), new Vector3Int(255,0,0), t); // Определяет значение между векторами
+            }
+            else
+            {
+                if (t / d1 <= 1)
+                {
+                    //от красного до желтого
+                    rgbSmoke = Vector3.Lerp(new Vector3Int(255, 0, 0), new Vector3Int(255, 255, 0), t / d1);
+                }
+                else
+                {
+                    //от желтого до белого
+                    rgbSmoke = Vector3.Lerp(new Vector3Int(255, 255, 0), new Vector3Int(255, 255, 255), t / d1 / d2);
+                }
+            }
+
+            //Выставляем цвета через концентрацию от синего до красного, а потом белого. !!Заменить концентрацию на температуру!!
             smokeSprite.color = new Color32(
-                (byte)Mathf.Clamp(pressure, 0, 255),
-                (byte)Mathf.Clamp(concentrate, 0, 255),
-                (byte)Mathf.Clamp(temperature_K / 2, 0, 255),
-                (byte)255);
+                (byte)Mathf.Clamp(rgbSmoke.x, 0, 255),  //Red
+                (byte)Mathf.Clamp(rgbSmoke.y, 0, 255),  //Green
+                (byte)Mathf.Clamp(rgbSmoke.z, 0, 255),  //Blue
+                (byte)Mathf.Clamp(100, 0, 255));        //Alpha
         }
     }
 

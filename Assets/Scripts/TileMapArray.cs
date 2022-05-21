@@ -123,27 +123,32 @@ public class TileMapArray : MonoBehaviour
                 //List<Vector3> sortingPipesNetwork = new List<Vector3>();
                 pipesNetwork = new List<Vector3[,]>();
                 int zMax = 10; //максимум количества систем, временное значение
-                Vector3[,] sortingPipesNetwork = new Vector3[bounds.xMax, bounds.yMax];
-                Vector3[,,] sortingSavedPipesNetwork = new Vector3[bounds.xMax, bounds.yMax, zMax];
+                Vector3[,] sortingPipesNetwork = new Vector3[bounds.xMax, bounds.yMax]; // общим массив который надо отсортировать
+                Vector3[,,] sortingSavedPipesNetwork = new Vector3[bounds.xMax, bounds.yMax, zMax]; // массивы, где каждый Z-уровень - система труб
                 //pipesNetwork.Add(sortingPipesNetwork);
 
                 Vector3Int placeSort = new Vector3Int(0, 0, 0);// = sortingPipesNetwork.; //для запоминания выбора сортировки
 
-                for (int n = bounds.xMin; n < bounds.xMax; n++)
-                {
-                    for (int p = bounds.yMin; p < bounds.yMax; p++)
-                    {
-                        Vector3Int localPlace = new Vector3Int(n, p, 0);
-                        Vector3 place = map[c_map].CellToWorld(localPlace);
-                        Vector3Int tilePosition = new Vector3Int((int)(place.x + bounds.xMax + 1),
-                                                                      (int)(place.y + bounds.yMax), 0);
+                Debug.Log("1");//тестовый   !!!!ПОТОМ УБРАТЬ!!!
 
+                for (int px = bounds.xMin; px < bounds.xMax; px++)
+                {
+                    for (int py = bounds.yMin; py < bounds.yMax; py++)
+                    {
+                        Vector3Int localPlace = new Vector3Int(px, py, 0);
+                        Vector3 place = map[c_map].CellToWorld(localPlace);
+                        Vector3Int tilePosition = new Vector3Int((int)(place.x + bounds.xMax + 1), 
+                                                                 (int)(place.y + bounds.yMax), 0);
+                        Debug.Log("2");//тестовый   !!!!ПОТОМ УБРАТЬ!!!
+                        //Проверяем наличие тайла по позиции на тайлмапе
                         if (map[c_map].HasTile(localPlace))
                         {
-                            sortingPipesNetwork[tilePosition.x, tilePosition.y] = tilePosition;
+                            Debug.Log("3");//тестовый   !!!!ПОТОМ УБРАТЬ!!!
+                            sortingPipesNetwork[tilePosition.x, tilePosition.y] = tilePosition; //!!!!!!!!!!!ТУТ ПРОБЛЕМА!!!!!!!!!!!!!!!!!!! скорее всего неправильно следующую позицию берет
                             placeSort = tilePosition;
 
                             pipesNetwork2.Add(tilePosition); //добавляем наш тайл в список  !!!!ПОТОМ УБРАТЬ!!!
+                            Debug.Log("4");//тестовый   !!!!ПОТОМ УБРАТЬ!!!
                         }
                     }
                 }
@@ -151,48 +156,86 @@ public class TileMapArray : MonoBehaviour
 
                 //Сортируем найденные объекты по сетям труб
                 bool checkNeedExit = false;
+                Vector3Int placeLast = placeSort; //последний сохраненный
+                int zSaved = 0; //количество созданных слоев массивов сети труб
                 do
                 {
-                    Vector3 placeLast = sortingPipesNetwork[placeSort.x, placeSort.y];
-                    int zSaved = 0;
+                    bool checkBreak = false; //проверка на выход из поиска тайлов
                     for (int px = -1; px <= 1; px++)
                     {
-                        bool checkBreak = false;
                         for (int py = -1; py <= 1; py++)
                         {
-                            if (placeSort.x + px != 0 && placeSort.y + py != 0 //возможно надо было поставить ||
-                                && placeSort.x != 0 && placeSort.y != 0)
+                            //проверяем чтобы значения не являлись самим собой и не было нулями (!без проверки выходят ли они за массив и меньше ли нуля, надо бы добавить!)
+                            if (!(px == 0 && py == 0)
+                                && !(placeLast.x + px == 0 && placeLast.y + py == 0)
+                                && !(placeLast.x == 0 && placeLast.y == 0))
                             {
-                                if (sortingPipesNetwork[placeSort.x + px, placeSort.y + py] != null)
+                                //проверяем нахождение тайла по заданной позиции на всех слоях
+                                for (int pz = 0; pz <= zSaved; pz++)
                                 {
-                                    sortingSavedPipesNetwork[placeSort.x, placeSort.y, zSaved] = placeLast;
-                                    placeLast = sortingPipesNetwork[placeSort.x + px, placeSort.y + py];
-                                    pipesNetwork2.Remove(placeSort);
-
-                                    checkBreak = true; //выходим из проверки остальных позиций
-                                    break;
-                                }
-                                else
-                                {
-                                    //проверяем не пересекается ли он с другими слоями и не является ли их продолжением
-                                    //производим те же действия, но уже для каждого слоя
-                                    for (int pz = 0; pz <= zMax; pz++)
+                                    if (sortingSavedPipesNetwork[placeLast.x + px, placeLast.y + py, pz] != null)
                                     {
-                                        if (sortingSavedPipesNetwork[placeSort.x + px, placeSort.y + py, pz] != null)
-                                        {
-                                            sortingSavedPipesNetwork[placeSort.x, placeSort.y, pz] = placeLast;
-                                            placeLast = sortingSavedPipesNetwork[placeSort.x + px, placeSort.y + py, pz];
-                                            pipesNetwork2.Remove(placeSort);
+                                        Debug.Log("5");//тестовый   !!!!ПОТОМ УБРАТЬ!!!
+                                        //запоминаем на текущем слое
+                                        sortingSavedPipesNetwork[placeLast.x, placeLast.y, pz] = new Vector3(placeLast.x, placeLast.y, pz);
 
-                                            checkBreak = true; //выходим из проверки остальных позиций
-                                            break;
+                                        //очищаем общий массив для сортировки
+                                        sortingPipesNetwork[placeLast.x, placeLast.y] = new Vector3(0, 0);
+                                        pipesNetwork2.Remove(placeLast); //убираем элемент из тестового листа  !!!!ПОТОМ УБРАТЬ!!!
+
+                                        //ищем следующий элемент с которого будем начинать следующий поиск
+                                        bool _checkBreak = false;
+                                        for (int _px = -1; _px <= 1; _px++)
+                                        {
+                                            for (int _py = -1; _py <= 1; _py++)
+                                            {
+                                                if (sortingSavedPipesNetwork[placeLast.x + _px, placeLast.y + _py, 0] != null)
+                                                {
+                                                    placeLast = new Vector3Int((int)(placeLast.x + _px), (int)(placeLast.y + _py), pz);
+                                                    _checkBreak = true;
+                                                    break;
+                                                }    
+                                            }
+                                            if (_checkBreak) break; //завершаем поиск
                                         }
+                                        
+                                        //выходим из проверки остальных позиций
+                                        checkBreak = true;
+                                        break;
                                     }
                                 }
+
+                                if (checkBreak) break; //завершаем поиск, иначе...
+
+                                //Тайл не найден на слоях, поэтому сохраняем его на новом слое. Если труба одна, то для него будет отдельный слой
+                                //...............................................................................
+                                //.............................ТУТ ТИПА КОД......................................
+                                //...............................................................................
+                                //!!!!!ЗДЕСЬ МЫ ДОЛЖНЫ ДЕЛАТЬ ТО ЖЕ ЧТО И НАВЕРХУ, НО С НУЛЕВЫМ СЛОЕМ ИЛИ СОЗДАНИЕМ ОТДЕЛЬНОГО СЛОЯ!!!!!!!
+
+                                //т.е. даже искать не надо, мы сразу ищем по нулевому если он не пустой
+                                if (sortingPipesNetwork[placeLast.x + px, placeLast.y + py] != null)
+                                {
+                                    Debug.Log("6");//тестовый   !!!!ПОТОМ УБРАТЬ!!!
+                                    //запоминаем на текущем слое
+                                    sortingSavedPipesNetwork[placeLast.x, placeLast.y, 0] = new Vector3(placeLast.x, placeLast.y, 0);
+
+                                    //очищаем общий массив для сортировки
+                                    sortingPipesNetwork[placeLast.x, placeLast.y] = new Vector3(0, 0);
+                                    pipesNetwork2.Remove(placeLast); //убираем элемент из тестового листа  !!!!ПОТОМ УБРАТЬ!!!
+
+                                    //Запоминаем следующий
+                                    placeLast = new Vector3Int((int)(placeLast.x + px), (int)(placeLast.y + py), 0);
+                                }
                             }
+
+                            if (checkBreak) break; //завершаем поиск
+
                         }
                         if (checkBreak) break;
                     }
+
+                    Debug.Log("7");//тестовый   !!!!ПОТОМ УБРАТЬ!!!
 
                     //задаем что пора выходить
                     if (pipesNetwork2.Count == 0)
@@ -203,6 +246,7 @@ public class TileMapArray : MonoBehaviour
                 while (!checkNeedExit);
 
 
+                Debug.Log("8");//тестовый   !!!!ПОТОМ УБРАТЬ!!!
 
 
 
