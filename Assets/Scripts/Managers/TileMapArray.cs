@@ -19,7 +19,6 @@ public class TileMapArray : MonoBehaviour
     public TileBlock[,] tilesBlock; //массив блоковых тайлов - стены, стекло
     public TileDoor[,] tilesDoor; //массив объектов тайлов - двери
     public Tile[,] tilesPipe; //массив объектов тайлов - трубы, их девайсы
-    public List<Tilemap> devices; //массив всех объектов-девайсов
     public List<TilePipeNetwork> pipesNetwork; //список систем массива труб, внутри которых находятся входы труб
 
     HashSet<GameObject> hashObjects;
@@ -29,10 +28,8 @@ public class TileMapArray : MonoBehaviour
     Camera mainCamera;
 
     [Header("Рассчетные переменные")]
-    public float tick_time; //Время в секундах для повтора
-    [SerializeField] float tick_curr_time; //Текущее время
-    public bool isNeedUpdateArray = false; //проверка, необходимо ли обновление или можно не выполнять метод UpdateArray()
-    [SerializeField] int countActivate; //Счет невозможных тайлов для обновление
+    private float tick_time; //Время в секундах для повтора
+    public int countActivate; //Счет невозможных тайлов для обновление
 
     //Типы ТайлМапов по нумерациям !!!лучше переделать с определением типа из получаемого списка!!!
     enum TileMapType
@@ -62,48 +59,36 @@ public class TileMapArray : MonoBehaviour
         isInitializeCompleted = true;
     }
 
-    void FixedUpdate()
-    {
-        //Запуск обновления тайлов газа
-        //if (isNeedUpdateArray) UpdateArray(); -- !!!временно убрано из-за бага деактивации!!!
-        UpdateArray();
-    }
-
     /// <summary>
     /// Обновление массива тайлов по границам
     /// </summary>
-    private void UpdateArray()
+    public void UpdateArray()
     {
-        tick_curr_time -= Time.deltaTime; // Вычитаем время кадра
-        if (tick_curr_time <= 0) //Время вышло
+        //Запуск обновления тайлов газа
+        countActivate = 0;
+        for (int i = 0; i < tilesGas.Length; i++)
         {
-            countActivate = 0;
-            for (int i = 0; i < tilesGas.Length; i++)
+            for (int j = 0; j < tilesGas.Length; j++)
             {
-                for (int j = 0; j < tilesGas.Length; j++)
+                try
                 {
-                    try
+                    if (tilesGas[i, j] != null)
                     {
-                        if (tilesGas[i, j] != null)
-                        {
-                            tilesGas[i, j].PressureTransmission(tick_time);
+                        tilesGas[i, j].PressureTransmission(tick_time);
 
-                            if (tilesGas[i, j].isActive)
-                            {
-                                countActivate++;
-                                isNeedUpdateArray = true;
-                            }
+                        if (tilesGas[i, j].isActive)
+                        {
+                            countActivate++;
                         }
                     }
-                    catch
-                    {
-                        continue;
-                    }
+                }
+                catch
+                {
+                    continue;
                 }
             }
-            tick_curr_time = tick_time; // повторный запуск таймера
-            isNeedUpdateArray = countActivate == 0 ? false : true;
         }
+
     }
 
     /// <summary>
@@ -336,11 +321,11 @@ public class TileMapArray : MonoBehaviour
                     tilesDoor[px, py].InitializeDoor(GetComponent<TileMapArray>(), new Vector2Int(px, py), "TileDoor"); //запускаем обработчик дверей
                     break;
                 }
-            case (int)TileMapType.devices: //девайсы
-                {
-                    Debug.Log($"Найдены девайсы: {c_object}, {c_object.name} [{px};{py}]");
-                    break;
-                }
+            //case (int)TileMapType.devices: //девайсы
+            //    {
+            //        Debug.Log($"Найдены девайсы: {c_object}, {c_object.name} [{px};{py}]");
+            //        break;
+            //    }
         }
     }
 

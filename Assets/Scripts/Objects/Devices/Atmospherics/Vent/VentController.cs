@@ -2,27 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VentController : DeviceObject
+public class VentController : AtmosDevice
 {
-    public TilePipeNetwork pipesNetwork;
-
     VentAnimator ventAnimator;
-    public float speedAnimation = 1;
 
     public VentType currentType = VentType.filter;
 
-    private void Start()
-    {
-        isToggleOn = true;
-        Initialize();
-    }
-
-    public override void Initialize()
+    public override void Initialize(Vector2Int _tilePlace)
     {
         Debug.Log($"{name} определен");
+        InitializeTilePlace(_tilePlace);
 
         ventAnimator = GetComponent<VentAnimator>();
         ventAnimator.Initialize(isToggleOn, currentType, speedAnimation);
+    }
+    public override void UpdateAtmosDevice()
+    {
+        Debug.Log("Апдейт атмоса определен");
+
+        //if (tilesArray.tilesGas[tilePlace.x, tilePlace.y].pressure != pipesNetwork)
+
+        //тут код передачи давления атмоса
     }
 
     /// <summary>

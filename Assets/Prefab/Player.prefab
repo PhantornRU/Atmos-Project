@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 6
   m_Sprite: {fileID: 5698169312293626619, guid: 2ba19a6d5ae44da4a99b916fb11c2c7d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -103,6 +103,8 @@ MonoBehaviour:
   - {fileID: -6028828738182762029, guid: 2ba19a6d5ae44da4a99b916fb11c2c7d, type: 3}
   - {fileID: 768149121694345916, guid: 2ba19a6d5ae44da4a99b916fb11c2c7d, type: 3}
   - {fileID: 630200551753206103, guid: 2ba19a6d5ae44da4a99b916fb11c2c7d, type: 3}
+  ruleTileLatice: {fileID: 0}
+  ruleTileWall: {fileID: 0}
 --- !u!50 &1194156980
 Rigidbody2D:
   serializedVersion: 4

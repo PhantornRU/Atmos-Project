@@ -5,6 +5,7 @@ using UnityEngine;
 public class DeviceObject : TileObject
 {
     public bool isToggleOn = false;
+    public float speedAnimation = 1;
 
     /// <summary>
     /// Переключить девайс

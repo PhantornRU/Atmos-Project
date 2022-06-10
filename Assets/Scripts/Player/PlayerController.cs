@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D rb;
     float horizontal, vertical;
     TileMapArray tilesArray;
+    ProjectInitializer projectInitializer;
 
     Vector2 moveVector;
 
@@ -49,6 +50,13 @@ public class PlayerController : MonoBehaviour
         isInitialized = true;
     }
 
+    private void Start()
+    {
+        //ищем по координатам и провер€ем находитс€ ли объект в радиусе границ одного из доступных тайлЁррей, на случай если этих зон будет несколько
+        tilesArray = FindObjectOfType<TileMapArray>().GetComponent<TileMapArray>(); //!!!!!!временна€ заглушка!!!!!!!
+        projectInitializer = FindObjectOfType<ProjectInitializer>().GetComponent<ProjectInitializer>(); //!!!!!!временна€ заглушка!!!!!!!
+    }
+
     float tick_curr_time; //“екущее врем€
 
     private void FixedUpdate()
@@ -70,7 +78,7 @@ public class PlayerController : MonoBehaviour
         tick_curr_time -= Time.deltaTime; // ¬ычитаем врем€ кадра
         if (tick_curr_time <= 0)
         {
-            tick_curr_time = tilesArray.tick_time;
+            tick_curr_time = projectInitializer.tick_time;
             ButtonsFunctions();
         }
     }
@@ -97,9 +105,6 @@ public class PlayerController : MonoBehaviour
 
     void CheckTileArray()
     {
-        //ищем по координатам и провер€ем находитс€ ли объект в радиусе границ одного из доступных тайлЁррей, на случай если этих зон будет несколько
-        tilesArray = FindObjectOfType<TileMapArray>().GetComponent<TileMapArray>(); //!!!!!!временна€ заглушка
-
         //ведем поиск дл€ каждого тайл мапа
         foreach (TileMapArray tileMap in FindObjectsOfType<TileMapArray>())
         {

@@ -723,7 +723,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 3
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -1496,7 +1496,7 @@ GameObject:
   - component: {fileID: 661726646}
   - component: {fileID: 661726645}
   m_Layer: 0
-  m_Name: Tilemap Pipes Devices
+  m_Name: Tilemap Floor Pipes Devices
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1519,8 +1519,8 @@ Transform:
   - {fileID: 1811002612}
   - {fileID: 1942057684}
   - {fileID: 2083482102}
-  m_Father: {fileID: 1456572600}
-  m_RootOrder: 4
+  m_Father: {fileID: 1008172625}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &661726645
 TilemapRenderer:
@@ -1561,7 +1561,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 4
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -5382,7 +5382,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -5404,6 +5404,37 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1456572600}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1008172624
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1008172625}
+  m_Layer: 0
+  m_Name: Devices
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1008172625
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008172624}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 661726644}
+  m_Father: {fileID: 1456572600}
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1059201509
 GameObject:
@@ -6166,6 +6197,7 @@ GameObject:
   - component: {fileID: 1456572600}
   - component: {fileID: 1456572599}
   - component: {fileID: 1456572598}
+  - component: {fileID: 1456572603}
   - component: {fileID: 1456572602}
   - component: {fileID: 1456572601}
   m_Layer: 0
@@ -6192,15 +6224,10 @@ MonoBehaviour:
   - {fileID: 1520150429}
   - {fileID: 1915975138}
   - {fileID: 517448567}
-  devices:
-  - {fileID: 661726646}
   pipesNetwork: []
   bounds:
     m_Position: {x: 0, y: 0, z: 0}
     m_Size: {x: 0, y: 0, z: 0}
-  tick_time: 0.1
-  tick_curr_time: 0
-  isNeedUpdateArray: 0
   countActivate: 0
 --- !u!156049354 &1456572599
 Grid:
@@ -6229,7 +6256,7 @@ Transform:
   - {fileID: 1520150431}
   - {fileID: 1915975136}
   - {fileID: 517448565}
-  - {fileID: 661726644}
+  - {fileID: 1008172625}
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6276,6 +6303,21 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1456572603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1456572597}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce3692bd01a281c47a62ce6e1ceee7c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  atmosphereTileMapDevices:
+  - {fileID: 661726646}
+  usingTileMapDevices: []
 --- !u!1001 &1503776022
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7251,7 +7293,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 10
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -7898,14 +7940,10 @@ MonoBehaviour:
   - {fileID: 1903660617}
   - {fileID: 716116847}
   - {fileID: 246589539}
-  devices: []
   pipesNetwork: []
   bounds:
     m_Position: {x: 0, y: 0, z: 0}
     m_Size: {x: 0, y: 0, z: 0}
-  tick_time: 0
-  tick_curr_time: 0
-  isNeedUpdateArray: 0
   countActivate: 0
 --- !u!156049354 &1873260186
 Grid:
@@ -14356,7 +14394,7 @@ TilemapRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 10
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
   m_MaxChunkCount: 16
@@ -14967,6 +15005,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tick_time: 0.1
+  tick_curr_time: 0
+  isNeedUpdateArray: 1
 --- !u!1001 &2083482101
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15104,7 +15144,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1923952716525308333, guid: 16c5b5017441f0d4fa92e7ee5e866b5d, type: 3}
       propertyPath: m_SortingOrder
-      value: 3
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4664782135832244671, guid: 16c5b5017441f0d4fa92e7ee5e866b5d, type: 3}
       propertyPath: m_Name

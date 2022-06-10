@@ -48,7 +48,7 @@ public class TileGas : TileObject
     {
         tilesArray = _tilesArray; //задаем ссылку на текущий массив
         tilePlace = _tilePlace; //индексы позиции
-
+        //InitializeTilePlace(_tilePlace);
         name = $"{_name}{tilePlace}";
     }
 
@@ -155,7 +155,7 @@ public class TileGas : TileObject
         }
 
         //передаем тайл мапу что необходимо провести обновления тайлов
-        if (!tilesArray.isNeedUpdateArray) tilesArray.isNeedUpdateArray = true;
+        //if (!tilesArray.isNeedUpdateArray) tilesArray.isNeedUpdateArray = true;
     }
 
     bool CheckGasBlock(int x, int y)

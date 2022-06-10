@@ -75,7 +75,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: b1a3828ad8b2f1c469ca6a4b8929e8ce, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -141,7 +141,7 @@ MonoBehaviour:
   tilePlace: {x: 0, y: 0}
   isBlockGas: 1
   isOpen: 0
-  speed: 1
+  speedAnimation: 1
 --- !u!114 &2131742223534186287
 MonoBehaviour:
   m_ObjectHideFlags: 0

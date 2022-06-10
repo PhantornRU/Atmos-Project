@@ -8,6 +8,7 @@ public class TilePipeNetwork : MonoBehaviour
     public bool[,] allPipes;
     public List<Vector2Int> allPipesDevices; //будем использовано вбудущем при введении девайсов
     public Vector2Int size;
+    public float pressure = 101f;
 
     public void Initialize(int keyNetwork, Vector2Int _size)
     {
