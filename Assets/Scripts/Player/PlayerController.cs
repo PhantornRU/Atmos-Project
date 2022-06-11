@@ -78,7 +78,7 @@ public class PlayerController : MonoBehaviour
         tick_curr_time -= Time.deltaTime; // Вычитаем время кадра
         if (tick_curr_time <= 0)
         {
-            tick_curr_time = projectInitializer.tick_time;
+            tick_curr_time = ProjectInitializer.tick_time;
             ButtonsFunctions();
         }
     }

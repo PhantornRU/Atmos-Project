@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class ProjectInitializer : MonoBehaviour
 {
-    public float tick_time = 0.1f; //Время в секундах для повтора
+    public const float tick_time = 0.1f; //Время в секундах для повтора
     [SerializeField] float tick_curr_time; //Текущее время
 
     private List<TileMapArray> tileMapArray;
     private List<DevicesManager> devicesManager;
+
+    public bool isNeedAtmosUpdate = true;
 
     void Start()
     {
@@ -48,25 +50,27 @@ public class ProjectInitializer : MonoBehaviour
         tick_curr_time -= Time.deltaTime; // Вычитаем время кадра
         if (tick_curr_time <= 0) //Время вышло
         {
-
-            foreach (TileMapArray tileMap in tileMapArray)
+            if (isNeedAtmosUpdate)
             {
-                tileMap.UpdateTileMaps();
-                //isNeedUpdateArray = tileMap.countActivate > 0; //isNeedUpdateArray = tileMap.countActivate > 0 ? true : false;
+                foreach (TileMapArray tileMap in tileMapArray)
+                {
+                    tileMap.UpdateTileMaps();
+                    //isNeedUpdateArray = tileMap.countActivate > 0; //isNeedUpdateArray = tileMap.countActivate > 0 ? true : false;
+                }
+
+                //Обновляем девайсы
+                //!!! временно отключен из-за ненадобности !!!
+                //if (isNeedUpdateArray)
+                //{
+                //    foreach (DevicesManager devices in devicesManager)
+                //    {
+                //        devices.UpdateDevices();
+                //    }
+                //}
+
+                tick_curr_time = tick_time; // повторный запуск таймера
+                                            //isNeedUpdateArray = true;
             }
-
-            //Обновляем девайсы
-            //!!! временно отключен из-за ненадобности !!!
-            //if (isNeedUpdateArray)
-            //{
-            //    foreach (DevicesManager devices in devicesManager)
-            //    {
-            //        devices.UpdateDevices();
-            //    }
-            //}
-
-            tick_curr_time = tick_time; // повторный запуск таймера
-            //isNeedUpdateArray = true;
         }
 
     }

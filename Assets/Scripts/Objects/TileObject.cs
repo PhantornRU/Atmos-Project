@@ -7,22 +7,22 @@ public class TileObject : MonoBehaviour
     [Header("Тайловые данные")]
     [HideInInspector] public TileMapArray tilesArray;
     public Vector2Int tilePlace;
-    public virtual void Initialize(Vector2Int _tilePlace)
+    public virtual void Initialize(BoundsInt bounds)
     {
         Debug.Log($"{name} не определен");
-        InitializeTilePlace(_tilePlace);
+        InitializeTilePlace(bounds);
     }
 
-    private protected void InitializeTilePlace(Vector2Int _tilePlace)
+    private protected void InitializeTilePlace(BoundsInt bounds)
     {
-        tilePlace = _tilePlace;
+        tilePlace = GetTilePosition(bounds);
         name += $"{tilePlace}";
     }
 
-    //public Vector2Int GetTilePosition() // от 0+
-    //{
-    //    //позиция тайла из матрицы
-    //    return new Vector2Int((int)(transform.position.x + Mathf.Abs(tilesArray.bounds.xMin)),
-    //                          (int)(transform.position.y + Mathf.Abs(tilesArray.bounds.yMin)));
-    //}
+    public Vector2Int GetTilePosition(BoundsInt bounds) // от 0+
+    {
+        //позиция тайла из матрицы
+        return new Vector2Int((int)(transform.position.x + Mathf.Abs(bounds.xMin)),
+                              (int)(transform.position.y + Mathf.Abs(bounds.yMin)));
+    }
 }

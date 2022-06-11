@@ -8,12 +8,13 @@ public class TilePipeNetwork : MonoBehaviour
     public bool[,] allPipes;
     public List<AtmosDevice> allAtmosDevices = new List<AtmosDevice>(); //будем использовано вбудущем при введении девайсов
     public Vector2Int size;
-    public float pressure = 101f;
+    public float pressure = 128f;
     float molles;
 
     public List<Vector2Int> pipesEndingList;
 
     DevicesManager devicesManager;
+    TileMapArray tilesArray;
 
     public void Initialize(int keyNetwork, Vector2Int _size)
     {
@@ -23,21 +24,21 @@ public class TilePipeNetwork : MonoBehaviour
         key = keyNetwork;
 
         devicesManager = FindObjectOfType<DevicesManager>().GetComponent<DevicesManager>();
+        tilesArray = FindObjectOfType<TileMapArray>().GetComponent<TileMapArray>();
     }
+
+    private float checkDifferentGas = 5.0f;
 
     public void UpdatePipeNetwork()
     {
         //обновляем девайсы
         if (allAtmosDevices.Count > 0)
         {
-            Debug.Log($"Обновление системы труб [{key}], число девайсов: {allAtmosDevices.Count}");
-            //foreach (Vector2Int pipeEnd in PipesEndingList)
-            //{
-            //    Debug.Log($"У системы труб [{key}] - обновлен девайс {pipeEnd}");
-            //}
+            //Debug.Log($"Обновление системы труб [{key}], число девайсов: {allAtmosDevices.Count}");
             foreach (AtmosDevice device in allAtmosDevices)
             {
                 Debug.Log($"У системы труб [{key}] - обновлен девайс {device.transform.name}");
+                ChangePressureGas(device);
             }
         }
         else
@@ -46,9 +47,38 @@ public class TilePipeNetwork : MonoBehaviour
         }
     }
 
-    public void ChangePressureGas()
+    /// <summary>
+    /// Обновляем тайлы газа по девайсам, попутно обновляя давление в системе труб
+    /// </summary>
+    /// <param name="device"></param>
+    private void ChangePressureGas(AtmosDevice device)
     {
+        Vector2Int place = device.GetTilePosition(tilesArray.bounds);
+        TileGas tile = tilesArray.tilesGas[place.x, place.y];
+        float tick_time = ProjectInitializer.tick_time;
+        float speedGasChange = tile.SpeedGasChange(pressure, tick_time);
 
+        //проверяем давление
+        int mark = 0;
+        if (tile.pressure > pressure + checkDifferentGas)
+        {
+            mark = -1;
+        }
+        else if (tile.pressure < pressure - checkDifferentGas)
+        {
+            mark = 1;
+        }
+
+        //Обновляем давление
+        if (mark != 0)
+        {
+            tile.UpdatePressure(speedGasChange * mark);
+            ChangePressureNetwork(speedGasChange * mark * -1);
+        }
+    }
+    private void ChangePressureNetwork(float _pressure)
+    {
+        pressure += _pressure;
     }
 
     /// <summary>
@@ -186,7 +216,7 @@ public class TilePipeNetwork : MonoBehaviour
         return result;
     }
 
-    public void UpdateEndingPipesTrueList()
+    public void UpdateEndingPipesTrueList(BoundsInt bounds)
     {
         if (pipesEndingList != null)
         {
@@ -199,20 +229,18 @@ public class TilePipeNetwork : MonoBehaviour
         //вносим девайс в список если он присутствует и определяем его систему
         foreach (Vector2Int pipe in pipesEndingList)
         {
-            //Debug.Log("Текущая труба на " + pipe);
+            Debug.Log("Текущая труба на " + pipe);
             foreach (AtmosDevice device in devicesManager.listAtmosDevices)
             {
-                Debug.Log($"Найден {device.tilePlace} вместе с {pipe}");
-                if (device.tilePlace == pipe)
+                Debug.Log($"Найден {device.GetTilePosition(bounds)} вместе с {pipe}");
+                if (device.GetTilePosition(bounds) == pipe)
                 {
-                    Debug.Log($"Сравнение {device.tilePlace} успешно с {pipe}");
-                    //if (allAtmosDevices.Find)
+                    Debug.Log($"Сравнение {device.GetTilePosition(bounds)} успешно с {pipe}");
                     if (!allAtmosDevices.Contains(device))
-                    //if (!allAtmosDevices.Exists(x => x == device))
                     {
                         allAtmosDevices.Add(device);
                         device.pipesNetwork = this;
-                        Debug.Log($"Добавлен {device.tilePlace}, текущий счетчик труб: {allAtmosDevices.Count}");
+                        Debug.Log($"Добавлен {device.GetTilePosition(bounds)}, текущий счетчик труб: {allAtmosDevices.Count}");
                     }
                     break;
                 }

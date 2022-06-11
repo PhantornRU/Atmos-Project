@@ -31,7 +31,7 @@ public class DevicesManager : MonoBehaviour
         {
             foreach (Transform devices in tilemap_devices.transform)
             {
-                devices.GetComponent<DeviceObject>().Initialize(GetTilePosition(devices, bounds));
+                devices.GetComponent<DeviceObject>().Initialize(bounds);
             }
         }
 
@@ -40,7 +40,7 @@ public class DevicesManager : MonoBehaviour
         {
             foreach (Transform devices in tilemap_devices.transform)
             {
-                devices.GetComponent<AtmosDevice>().Initialize(GetTilePosition(devices, bounds));
+                devices.GetComponent<AtmosDevice>().Initialize(bounds);
                 listAtmosDevices.Add(devices.GetComponent<AtmosDevice>());
                 //Debug.Log($"Добавлен {devices.name} в {tilemap_devices}");
             }
@@ -61,12 +61,12 @@ public class DevicesManager : MonoBehaviour
     //    return result;
     //}
 
-    private Vector2Int GetTilePosition(Transform c_object, BoundsInt bounds)
-    {
-        //позиция тайла из матрицы
-        return new Vector2Int((int)(c_object.position.x + Mathf.Abs(bounds.xMin)),
-                              (int)(c_object.position.y + Mathf.Abs(bounds.yMin)));
-    }
+    //private Vector2Int GetTilePosition(Transform c_object, BoundsInt bounds)
+    //{
+    //    //позиция тайла из матрицы
+    //    return new Vector2Int((int)(c_object.position.x + Mathf.Abs(bounds.xMin)),
+    //                          (int)(c_object.position.y + Mathf.Abs(bounds.yMin)));
+    //}
 
     /// <summary>
     /// Обновление массива тайлов по границам

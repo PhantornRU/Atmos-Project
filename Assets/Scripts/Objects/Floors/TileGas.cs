@@ -20,7 +20,7 @@ public class TileGas : TileObject
     const float gas_r = 8.31f; //R - Газовая постоянная, равная 8,31
 
     [Header("Окружные тайлы")]
-    [SerializeField]private TileGas[] massGas = new TileGas[8];
+    [SerializeField]private TileGas[] massGas = new TileGas[8]; //!!!!!лучше ограничить до 4-ех, а то иначе проходит по диагонали!!!!!!!!!
     [Space(height: 10f)]
     //public bool isBlockGas = false;
 
@@ -91,7 +91,7 @@ public class TileGas : TileObject
                 if (massGas[num] != null && pressure > massGas[num].pressure + gasDiff)
                 {
                     //Debug.Log($"Изменен тайл {massGas[num].tilePlace}, давление {massGas[num].pressure}");
-                    float speedChange = SpeedGasChange(num, tick_time);
+                    float speedChange = SpeedGasChange(massGas[num].pressure, tick_time);
                     pressure -= speedChange;
                     massGas[num].UpdatePressure(speedChange);
                     countActive++;
@@ -109,7 +109,7 @@ public class TileGas : TileObject
                 {
                     //Debug.Log($"Изменен тайл {massGas[num].tilePlace}, давление {massGas[num].pressure}");
                     //speedChange = (float)(1.414 * Mathf.Sqrt(pressure - massGas[num].pressure)) * tick_time * Time.deltaTime;
-                    float speedChange = SpeedGasChange(num, tick_time);
+                    float speedChange = SpeedGasChange(massGas[num].pressure, tick_time);
                     pressure -= speedChange;
                     countActive++;
 
@@ -167,11 +167,11 @@ public class TileGas : TileObject
     /// <summary>
     /// Формула для рассчета смещения необходимого количества газа к тайлу газа toTileNumChange, из внутреннего массива газов.
     /// </summary>
-    private float SpeedGasChange(int toTileNumChange, float tick_time)
+    public float SpeedGasChange(float toTilePressureChange, float tick_time)
     {
         //!!!!!здесь должна быть нормальная формула!!!!
         //speedChange = (float)(1.414 * Mathf.Sqrt(pressure - massGas[num].pressure)) * tick_time * Time.deltaTime;
-        return 1.414f * Mathf.Abs(pressure - massGas[toTileNumChange].pressure) * tick_time * Time.deltaTime;
+        return 1.414f * Mathf.Abs(pressure - toTilePressureChange) * tick_time * Time.deltaTime;
     }
 
     /// <summary>

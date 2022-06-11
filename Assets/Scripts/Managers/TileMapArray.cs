@@ -245,7 +245,7 @@ public class TileMapArray : MonoBehaviour
             keyIntNetwork++;
             network.key = keyIntNetwork;
 
-            network.UpdateEndingPipesTrueList();
+            network.UpdateEndingPipesTrueList(bounds);
         }
     }
 

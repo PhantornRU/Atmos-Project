@@ -8,10 +8,10 @@ public class VentController : AtmosDevice
 
     public VentType currentType = VentType.filter;
 
-    public override void Initialize(Vector2Int _tilePlace)
+    public override void Initialize(BoundsInt bounds)
     {
         Debug.Log($"{name} определен");
-        InitializeTilePlace(_tilePlace);
+        InitializeTilePlace(bounds);
 
         ventAnimator = GetComponent<VentAnimator>();
         ventAnimator.Initialize(isToggleOn, currentType, speedAnimation);
