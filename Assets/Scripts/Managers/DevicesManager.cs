@@ -12,7 +12,7 @@ public class DevicesManager : MonoBehaviour
     public List<Tilemap> atmosphereTileMapDevices; //список всех тайлмап объектов-девайсов атмосферики
     public List<Tilemap> usingTileMapDevices; //список всех тайлмап объектов-девайсов с которыми можно взаимодействовать
 
-    private List<AtmosDevice> listAtmosDevices = new List<AtmosDevice>();
+    public List<AtmosDevice> listAtmosDevices = new List<AtmosDevice>();
 
     //private bool isInitializeCompleted = false; //проверка на завершение инициализации
 
@@ -42,9 +42,24 @@ public class DevicesManager : MonoBehaviour
             {
                 devices.GetComponent<AtmosDevice>().Initialize(GetTilePosition(devices, bounds));
                 listAtmosDevices.Add(devices.GetComponent<AtmosDevice>());
+                //Debug.Log($"Добавлен {devices.name} в {tilemap_devices}");
             }
         }
     }
+
+    //public List<AtmosDevice> GetListAtmosDevices()
+    //{
+    //    List<AtmosDevice> result = new List<AtmosDevice>();
+    //    foreach (Tilemap tilemap_devices in atmosphereTileMapDevices)
+    //    {
+    //        foreach (Transform devices in tilemap_devices.transform)
+    //        {
+    //            devices.GetComponent<AtmosDevice>().Initialize(GetTilePosition(devices, bounds));
+    //            listAtmosDevices.Add(devices.GetComponent<AtmosDevice>());
+    //        }
+    //    }
+    //    return result;
+    //}
 
     private Vector2Int GetTilePosition(Transform c_object, BoundsInt bounds)
     {
@@ -58,7 +73,7 @@ public class DevicesManager : MonoBehaviour
     /// </summary>
     public void UpdateDevices()
     {
-        //обновляем атмосферные девайсы
+        //обновляем атмосферные девайсы //!!! временно отключено, так как не используется !!!
         foreach (Tilemap tilemap_devices in atmosphereTileMapDevices)
         {
             foreach (AtmosDevice devices in listAtmosDevices)

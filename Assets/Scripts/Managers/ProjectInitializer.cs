@@ -20,6 +20,13 @@ public class ProjectInitializer : MonoBehaviour
 
         //Инициализация объектов по определенному порядку для их корректной обработки
 
+        //Инициализируем девайсы
+        foreach (DevicesManager devices in FindObjectsOfType<DevicesManager>())
+        {
+            devices.Initialize(tick_time, bounds);
+            devicesManager.Add(devices);
+        }
+
         //Инициализируем тайлмапы для их внутренней обработки
         foreach (TileMapArray tileMap in FindObjectsOfType<TileMapArray>())
         {
@@ -27,13 +34,6 @@ public class ProjectInitializer : MonoBehaviour
             tileMapArray.Add(tileMap);
 
             bounds = tileMap.bounds; //!!! временно, если не будет добавляться дополнительные тайлмапы !!!
-        }
-
-        //Инициализируем девайсы
-        foreach (DevicesManager devices in FindObjectsOfType<DevicesManager>())
-        {
-            devices.Initialize(tick_time, bounds);
-            devicesManager.Add(devices);
         }
 
         //Инициализируем игрока и его компоненты после тайл мапов
@@ -51,18 +51,19 @@ public class ProjectInitializer : MonoBehaviour
 
             foreach (TileMapArray tileMap in tileMapArray)
             {
-                tileMap.UpdateArray();
+                tileMap.UpdateTileMaps();
                 //isNeedUpdateArray = tileMap.countActivate > 0; //isNeedUpdateArray = tileMap.countActivate > 0 ? true : false;
             }
 
             //Обновляем девайсы
-            if (isNeedUpdateArray)
-            {
-                foreach (DevicesManager devices in devicesManager)
-                {
-                    devices.UpdateDevices();
-                }
-            }
+            //!!! временно отключен из-за ненадобности !!!
+            //if (isNeedUpdateArray)
+            //{
+            //    foreach (DevicesManager devices in devicesManager)
+            //    {
+            //        devices.UpdateDevices();
+            //    }
+            //}
 
             tick_curr_time = tick_time; // повторный запуск таймера
             //isNeedUpdateArray = true;

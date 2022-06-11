@@ -62,7 +62,7 @@ public class TileMapArray : MonoBehaviour
     /// <summary>
     /// Обновление массива тайлов по границам
     /// </summary>
-    public void UpdateArray()
+    public void UpdateTileMaps()
     {
         //Запуск обновления тайлов газа
         countActivate = 0;
@@ -89,6 +89,11 @@ public class TileMapArray : MonoBehaviour
             }
         }
 
+        //обновляем системы труб с передачей газов
+        foreach (TilePipeNetwork network in pipesNetwork)
+        {
+            network.UpdatePipeNetwork();
+        }
     }
 
     /// <summary>

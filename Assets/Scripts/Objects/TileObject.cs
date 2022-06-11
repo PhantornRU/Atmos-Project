@@ -18,4 +18,11 @@ public class TileObject : MonoBehaviour
         tilePlace = _tilePlace;
         name += $"{tilePlace}";
     }
+
+    //public Vector2Int GetTilePosition() // от 0+
+    //{
+    //    //позиция тайла из матрицы
+    //    return new Vector2Int((int)(transform.position.x + Mathf.Abs(tilesArray.bounds.xMin)),
+    //                          (int)(transform.position.y + Mathf.Abs(tilesArray.bounds.yMin)));
+    //}
 }

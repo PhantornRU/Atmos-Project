@@ -6,9 +6,14 @@ public class TilePipeNetwork : MonoBehaviour
 {
     public int key;
     public bool[,] allPipes;
-    public List<Vector2Int> allPipesDevices; //будем использовано вбудущем при введении девайсов
+    public List<AtmosDevice> allAtmosDevices = new List<AtmosDevice>(); //будем использовано вбудущем при введении девайсов
     public Vector2Int size;
     public float pressure = 101f;
+    float molles;
+
+    public List<Vector2Int> pipesEndingList;
+
+    DevicesManager devicesManager;
 
     public void Initialize(int keyNetwork, Vector2Int _size)
     {
@@ -16,6 +21,34 @@ public class TilePipeNetwork : MonoBehaviour
         allPipes = new bool[size.x, size.y];
 
         key = keyNetwork;
+
+        devicesManager = FindObjectOfType<DevicesManager>().GetComponent<DevicesManager>();
+    }
+
+    public void UpdatePipeNetwork()
+    {
+        //обновл€ем девайсы
+        if (allAtmosDevices.Count > 0)
+        {
+            Debug.Log($"ќбновление системы труб [{key}], число девайсов: {allAtmosDevices.Count}");
+            //foreach (Vector2Int pipeEnd in PipesEndingList)
+            //{
+            //    Debug.Log($"” системы труб [{key}] - обновлен девайс {pipeEnd}");
+            //}
+            foreach (AtmosDevice device in allAtmosDevices)
+            {
+                Debug.Log($"” системы труб [{key}] - обновлен девайс {device.transform.name}");
+            }
+        }
+        else
+        {
+            Debug.Log($"” системы труб [{key}] - отсутствуют доступные девайсы, число девайсов: {allAtmosDevices.Count}");
+        }
+    }
+
+    public void ChangePressureGas()
+    {
+
     }
 
     /// <summary>
@@ -133,22 +166,61 @@ public class TilePipeNetwork : MonoBehaviour
             if (count == 1)
             {
                 result.Add(pipe);
+
+                //вносим девайс в список если он присутствует и определ€ем его систему
+                //foreach (AtmosDevice device in devicesManager.listAtmosDevices)
+                //{
+                //    if (device.tilePlace == pipe)
+                //    {
+                //        if (!allPipesDevices.Contains(device))
+                //        {
+                //            allPipesDevices.Add(device);
+                //            device.pipesNetwork = this;
+                //        }
+                //    }
+                //}
+
             }
         }
 
         return result;
     }
 
-
-    public List<Vector2Int> PipesEndingList;
-
     public void UpdateEndingPipesTrueList()
     {
-        if (PipesEndingList != null)
+        if (pipesEndingList != null)
         {
-            PipesEndingList = new List<Vector2Int>();
+            pipesEndingList = new List<Vector2Int>();
         }
 
-        PipesEndingList = GetEndingPipesTrueList();
+        pipesEndingList = GetEndingPipesTrueList();
+        //List<AtmosDevice> devicesList = devicesManager.listAtmosDevices; //!!! можно заменить чтобы не проходить заного !!!
+
+        //вносим девайс в список если он присутствует и определ€ем его систему
+        foreach (Vector2Int pipe in pipesEndingList)
+        {
+            //Debug.Log("“екуща€ труба на " + pipe);
+            foreach (AtmosDevice device in devicesManager.listAtmosDevices)
+            {
+                Debug.Log($"Ќайден {device.tilePlace} вместе с {pipe}");
+                if (device.tilePlace == pipe)
+                {
+                    Debug.Log($"—равнение {device.tilePlace} успешно с {pipe}");
+                    //if (allAtmosDevices.Find)
+                    if (!allAtmosDevices.Contains(device))
+                    //if (!allAtmosDevices.Exists(x => x == device))
+                    {
+                        allAtmosDevices.Add(device);
+                        device.pipesNetwork = this;
+                        Debug.Log($"ƒобавлен {device.tilePlace}, текущий счетчик труб: {allAtmosDevices.Count}");
+                    }
+                    break;
+                }
+                else
+                {
+                    Debug.Log($"Ќе найден {pipe} в системе, текущий счетчик труб: {allAtmosDevices.Count}");
+                }
+            }
+        }
     }
 }

@@ -19,8 +19,11 @@ public class VentController : AtmosDevice
     public override void UpdateAtmosDevice()
     {
         Debug.Log("Апдейт атмоса определен");
-
-        //if (tilesArray.tilesGas[tilePlace.x, tilePlace.y].pressure != pipesNetwork)
+        //if (tilesArray.tilesGas[tilePlace.x, tilePlace.y].pressure > pipesNetwork.pressure + gasDiff)
+        //{
+            //pipesNetwork.ChangePressureGas();
+            //tilesArray.tilesGas[tilePlace.x, tilePlace.y].UpdatePressure();
+        //}
 
         //тут код передачи давления атмоса
     }
