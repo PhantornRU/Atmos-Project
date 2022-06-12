@@ -1,15 +1,25 @@
-using System.Collections;
+п»їusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Р•РґРёРЅС‹Р№ РіР°Р·РѕРїСЂРѕРІРѕРґ, РєР°Р¶РґС‹Р№ СЌР»РµРјРµРЅС‚ РіР°Р·РѕРїСЂРѕРІРѕРґР° - СЂР°Р·РґРµР»СЏРµС‚ РµРіРѕ РЅР° РґСЂСѓРіРёРµ СЃРёСЃС‚РµРјС‹.
+/// </summary>
 public class TilePipeNetwork : MonoBehaviour
 {
     public int key;
     public bool[,] allPipes;
-    public List<AtmosDevice> allAtmosDevices = new List<AtmosDevice>(); //будем использовано вбудущем при введении девайсов
+    public List<AtmosDevice> allAtmosDevices = new List<AtmosDevice>(); //Р±СѓРґРµРј РёСЃРїРѕР»СЊР·РѕРІР°РЅРѕ РІР±СѓРґСѓС‰РµРј РїСЂРё РІРІРµРґРµРЅРёРё РґРµРІР°Р№СЃРѕРІ
     public Vector2Int size;
-    public float pressure = 128f;
-    float molles;
+
+    [Header("РџР°СЂР°РјРµС‚СЂС‹")]
+    [Tooltip("РЈС‡Р°СЃС‚РІСѓСЋС‚ РІ С„РѕСЂРјСѓР»Р°С… РґР»СЏ РІС‹С‡РёСЃР»РµРЅРёР№, PV = nRT")]
+    [Min(0)] public float pressure = 101f; //P - kPa
+    [Min(0)] public float temperature_K = 297.15f; //T - РўРµРјРїРµСЂР°С‚СѓСЂР° РїРѕ РљРµР»СЊРІРёРЅСѓ, В°K = В°C + 273,15, Р—РЅР°С‡РµРЅРёРµ С‚РµРјРїРµСЂР°С‚СѓСЂС‹ Р°Р±СЃРѕР»СЋС‚РЅРѕРіРѕ РЅСѓР»СЏ вЂ” 0 В°Рљ, РёР»Рё в€’273,15 В°C.
+    [Min(0)] public float concentrate;//22.41f; //n - РєРѕРЅС†РµРЅС‚СЂР°С†РёСЏ С‡Р°СЃС‚РёС†, РєРѕР»РёС‡РµСЃС‚РІРѕ РІРµС‰РµСЃС‚РІР°, РњРѕР»Рё.  n=(P*V)/(R*T)
+    [Min(0)] public float volumeSystem = 0f; //V - РћР±СЉС‘Рј РІ Р»РёС‚СЂР°С… - СЃРєРѕР»СЊРєРѕ РјРµСЃС‚Р° РІРЅСѓС‚СЂРё РѕРґРЅРѕРіРѕ С‚Р°Р№Р»Р° Рё СЃРєРѕР»СЊРєРѕ РіР°Р·Р° РІСЃСЏ СЃРёСЃС‚РµРјР° РјРѕР¶РµС‚ СѓРґРµСЂР¶РёРІР°С‚СЊ. 
+    [Min(0)] const float volumePipe = 200f; //V - РћР±СЉС‘Рј РІ Р»РёС‚СЂР°С… - СЃРєРѕР»СЊРєРѕ РјРµСЃС‚Р° РІРЅСѓС‚СЂРё РѕРґРЅРѕРіРѕ С‚Р°Р№Р»Р° Рё СЃРєРѕР»СЊРєРѕ РіР°Р·Р° РѕРґРЅР° С‚СЂСѓР±Р° РјРѕР¶РµС‚ СѓРґРµСЂР¶РёРІР°С‚СЊ. 
+    const float gas_r = 8.31f; //R - Р“Р°Р·РѕРІР°СЏ РїРѕСЃС‚РѕСЏРЅРЅР°СЏ, СЂР°РІРЅР°СЏ 8,31
 
     public List<Vector2Int> pipesEndingList;
 
@@ -31,24 +41,24 @@ public class TilePipeNetwork : MonoBehaviour
 
     public void UpdatePipeNetwork()
     {
-        //обновляем девайсы
+        //РѕР±РЅРѕРІР»СЏРµРј РґРµРІР°Р№СЃС‹
         if (allAtmosDevices.Count > 0)
         {
-            //Debug.Log($"Обновление системы труб [{key}], число девайсов: {allAtmosDevices.Count}");
+            //Debug.Log($"РћР±РЅРѕРІР»РµРЅРёРµ СЃРёСЃС‚РµРјС‹ С‚СЂСѓР± [{key}], С‡РёСЃР»Рѕ РґРµРІР°Р№СЃРѕРІ: {allAtmosDevices.Count}");
             foreach (AtmosDevice device in allAtmosDevices)
             {
-                Debug.Log($"У системы труб [{key}] - обновлен девайс {device.transform.name}");
+                Debug.Log($"РЈ СЃРёСЃС‚РµРјС‹ С‚СЂСѓР± [{key}] - РѕР±РЅРѕРІР»РµРЅ РґРµРІР°Р№СЃ {device.transform.name}");
                 ChangePressureGas(device);
             }
         }
         else
         {
-            Debug.Log($"У системы труб [{key}] - отсутствуют доступные девайсы, число девайсов: {allAtmosDevices.Count}");
+            Debug.Log($"РЈ СЃРёСЃС‚РµРјС‹ С‚СЂСѓР± [{key}] - РѕС‚СЃСѓС‚СЃС‚РІСѓСЋС‚ РґРѕСЃС‚СѓРїРЅС‹Рµ РґРµРІР°Р№СЃС‹, С‡РёСЃР»Рѕ РґРµРІР°Р№СЃРѕРІ: {allAtmosDevices.Count}");
         }
     }
 
     /// <summary>
-    /// Обновляем тайлы газа по девайсам, попутно обновляя давление в системе труб
+    /// РћР±РЅРѕРІР»СЏРµРј С‚Р°Р№Р»С‹ РіР°Р·Р° РїРѕ РґРµРІР°Р№СЃР°Рј, РїРѕРїСѓС‚РЅРѕ РѕР±РЅРѕРІР»СЏСЏ РґР°РІР»РµРЅРёРµ РІ СЃРёСЃС‚РµРјРµ С‚СЂСѓР±
     /// </summary>
     /// <param name="device"></param>
     private void ChangePressureGas(AtmosDevice device)
@@ -56,9 +66,9 @@ public class TilePipeNetwork : MonoBehaviour
         Vector2Int place = device.GetTilePosition(tilesArray.bounds);
         TileGas tile = tilesArray.tilesGas[place.x, place.y];
         float tick_time = ProjectInitializer.tick_time;
-        float speedGasChange = tile.SpeedGasChange(pressure, tick_time);
+        float speedGasChange = tile.SpeedPressureChange(pressure, tick_time);
 
-        //проверяем давление
+        //РїСЂРѕРІРµСЂСЏРµРј РґР°РІР»РµРЅРёРµ
         int mark = 0;
         if (tile.pressure > pressure + checkDifferentGas)
         {
@@ -69,10 +79,10 @@ public class TilePipeNetwork : MonoBehaviour
             mark = 1;
         }
 
-        //Обновляем давление
+        //РћР±РЅРѕРІР»СЏРµРј РґР°РІР»РµРЅРёРµ (!!!РїСЂРё СЌС‚РѕРј РїСЂРё СѓРјРµРЅСЊС€РµРЅРёРё РґР°РІР»РµРЅРёРµ РЅРµ РѕР±РЅРѕРІР»СЏРµС‚ СЃРѕСЃРµРґРЅРёРµ С‚Р°Р№Р»С‹!!!)
         if (mark != 0)
         {
-            tile.UpdatePressure(speedGasChange * mark);
+            //tile.UpdateGas(speedGasChange * mark);
             ChangePressureNetwork(speedGasChange * mark * -1);
         }
     }
@@ -82,7 +92,7 @@ public class TilePipeNetwork : MonoBehaviour
     }
 
     /// <summary>
-    /// Добавляем тайл в массив
+    /// Р”РѕР±Р°РІР»СЏРµРј С‚Р°Р№Р» РІ РјР°СЃСЃРёРІ
     /// </summary>
     public void AddPipe(Vector2Int pipe)
     {
@@ -90,7 +100,7 @@ public class TilePipeNetwork : MonoBehaviour
     }
 
     /// <summary>
-    /// Проверяем пересекается ли с тайлами вокруг
+    /// РџСЂРѕРІРµСЂСЏРµРј РїРµСЂРµСЃРµРєР°РµС‚СЃСЏ Р»Рё СЃ С‚Р°Р№Р»Р°РјРё РІРѕРєСЂСѓРі
     /// </summary>
     public bool CheckPipesAround(Vector2Int pipe)
     {
@@ -101,11 +111,11 @@ public class TilePipeNetwork : MonoBehaviour
             {
                 int posX = pipe.x + px;
                 int posY = pipe.y + py;
-                if (posX >= 0 && posY >= 0 //не являются отрицательными значениями
-                    && (Mathf.Abs(px) != Mathf.Abs(py))  //исключаем диагональные значения
-                    && allPipes[posX, posY]) //выдают true
+                if (posX >= 0 && posY >= 0 //РЅРµ СЏРІР»СЏСЋС‚СЃСЏ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
+                    && (Mathf.Abs(px) != Mathf.Abs(py))  //РёСЃРєР»СЋС‡Р°РµРј РґРёР°РіРѕРЅР°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
+                    && allPipes[posX, posY]) //РІС‹РґР°СЋС‚ true
                 {
-                    //Debug.Log($"Найдено пересечение[{pipeX}; {pipeY}] с [{posX};{posY}]");
+                    //Debug.Log($"РќР°Р№РґРµРЅРѕ РїРµСЂРµСЃРµС‡РµРЅРёРµ[{pipeX}; {pipeY}] СЃ [{posX};{posY}]");
                     result = true;
                 }
             }
@@ -114,11 +124,11 @@ public class TilePipeNetwork : MonoBehaviour
     }
 
     /// <summary>
-    /// Объединение двух систем и их массивов
+    /// РћР±СЉРµРґРёРЅРµРЅРёРµ РґРІСѓС… СЃРёСЃС‚РµРј Рё РёС… РјР°СЃСЃРёРІРѕРІ
     /// </summary>
     public void MergeNetwork(TilePipeNetwork networkForMerge)
     {
-        //Debug.Log($"[{key}] объединил с собой: [{networkForMerge.key}]");
+        //Debug.Log($"[{key}] РѕР±СЉРµРґРёРЅРёР» СЃ СЃРѕР±РѕР№: [{networkForMerge.key}]");
         foreach (Vector2Int pipe in networkForMerge.GetTrueList())
         {
             allPipes[pipe.x, pipe.y] = networkForMerge.allPipes[pipe.x, pipe.y];
@@ -127,25 +137,25 @@ public class TilePipeNetwork : MonoBehaviour
     }
 
     /// <summary>
-    /// Разделение системы на несколько частей при удалении трубы
+    /// Р Р°Р·РґРµР»РµРЅРёРµ СЃРёСЃС‚РµРјС‹ РЅР° РЅРµСЃРєРѕР»СЊРєРѕ С‡Р°СЃС‚РµР№ РїСЂРё СѓРґР°Р»РµРЅРёРё С‚СЂСѓР±С‹
     /// </summary>
     public void SplitNetwork(Vector2Int splitPipePosition)
     {
-        //указываем на делимый тайл, после чего он делит всё что больше его координат по "x"(?)
+        //СѓРєР°Р·С‹РІР°РµРј РЅР° РґРµР»РёРјС‹Р№ С‚Р°Р№Р», РїРѕСЃР»Рµ С‡РµРіРѕ РѕРЅ РґРµР»РёС‚ РІСЃС‘ С‡С‚Рѕ Р±РѕР»СЊС€Рµ РµРіРѕ РєРѕРѕСЂРґРёРЅР°С‚ РїРѕ "x"(?)
     }
 
     /// <summary>
-    /// Получение всех данных о сети труб
+    /// РџРѕР»СѓС‡РµРЅРёРµ РІСЃРµС… РґР°РЅРЅС‹С… Рѕ СЃРµС‚Рё С‚СЂСѓР±
     /// </summary>
     public string GetInfo()
     {
-        string textInfo = "Сеть труб: ";
+        string textInfo = "РЎРµС‚СЊ С‚СЂСѓР±: ";
         for (int px = 0; px < size.x; px++)
         {
             textInfo += "\n";
             for (int py = 0; py < size.y; py++)
             {
-                string t = allPipes[px, py] ? "Т" : "F";
+                string t = allPipes[px, py] ? "Рў" : "F";
                 textInfo += $"[{px};{py}]:{t}, ";
             }
         }
@@ -153,7 +163,7 @@ public class TilePipeNetwork : MonoBehaviour
     }
 
     /// <summary>
-    /// Получаем массив со всеми значениями TRUE
+    /// РџРѕР»СѓС‡Р°РµРј РјР°СЃСЃРёРІ СЃРѕ РІСЃРµРјРё Р·РЅР°С‡РµРЅРёСЏРјРё TRUE
     /// </summary>
     public List<Vector2Int> GetTrueList()
     {
@@ -184,12 +194,12 @@ public class TilePipeNetwork : MonoBehaviour
                 for (int py = -1; py <= 1; py++)
                 {
                     Vector2Int position = new Vector2Int(pipe.x + px, pipe.y + py);
-                    if (position.x >= 0 && position.y >= 0 //не являются отрицательными значениями
-                        && (Mathf.Abs(px) != Mathf.Abs(py))  //исключаем диагональные значения
-                        && allPipes[position.x, position.y]) //выдают true
+                    if (position.x >= 0 && position.y >= 0 //РЅРµ СЏРІР»СЏСЋС‚СЃСЏ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅС‹РјРё Р·РЅР°С‡РµРЅРёСЏРјРё
+                        && (Mathf.Abs(px) != Mathf.Abs(py))  //РёСЃРєР»СЋС‡Р°РµРј РґРёР°РіРѕРЅР°Р»СЊРЅС‹Рµ Р·РЅР°С‡РµРЅРёСЏ
+                        && allPipes[position.x, position.y]) //РІС‹РґР°СЋС‚ true
                     {
                         count++;
-                        //Debug.Log($"Найдено пересечение[{pipeX}; {pipeY}] с [{posX};{posY}]");
+                        //Debug.Log($"РќР°Р№РґРµРЅРѕ РїРµСЂРµСЃРµС‡РµРЅРёРµ[{pipeX}; {pipeY}] СЃ [{posX};{posY}]");
                     }
                 }
             }
@@ -197,7 +207,7 @@ public class TilePipeNetwork : MonoBehaviour
             {
                 result.Add(pipe);
 
-                //вносим девайс в список если он присутствует и определяем его систему
+                //РІРЅРѕСЃРёРј РґРµРІР°Р№СЃ РІ СЃРїРёСЃРѕРє РµСЃР»Рё РѕРЅ РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ Рё РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ СЃРёСЃС‚РµРјСѓ
                 //foreach (AtmosDevice device in devicesManager.listAtmosDevices)
                 //{
                 //    if (device.tilePlace == pipe)
@@ -216,7 +226,7 @@ public class TilePipeNetwork : MonoBehaviour
         return result;
     }
 
-    public void UpdateEndingPipesTrueList(BoundsInt bounds)
+    public void UpdateEndingPipesTrueListAndVolume(BoundsInt bounds)
     {
         if (pipesEndingList != null)
         {
@@ -224,31 +234,34 @@ public class TilePipeNetwork : MonoBehaviour
         }
 
         pipesEndingList = GetEndingPipesTrueList();
-        //List<AtmosDevice> devicesList = devicesManager.listAtmosDevices; //!!! можно заменить чтобы не проходить заного !!!
+        //List<AtmosDevice> devicesList = devicesManager.listAtmosDevices; //!!! РјРѕР¶РЅРѕ Р·Р°РјРµРЅРёС‚СЊ С‡С‚РѕР±С‹ РЅРµ РїСЂРѕС…РѕРґРёС‚СЊ Р·Р°РЅРѕРіРѕ !!!
 
-        //вносим девайс в список если он присутствует и определяем его систему
+        //РІРЅРѕСЃРёРј РґРµРІР°Р№СЃ РІ СЃРїРёСЃРѕРє РµСЃР»Рё РѕРЅ РїСЂРёСЃСѓС‚СЃС‚РІСѓРµС‚ Рё РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ СЃРёСЃС‚РµРјСѓ
         foreach (Vector2Int pipe in pipesEndingList)
         {
-            Debug.Log("Текущая труба на " + pipe);
+            Debug.Log("РўРµРєСѓС‰Р°СЏ С‚СЂСѓР±Р° РЅР° " + pipe);
             foreach (AtmosDevice device in devicesManager.listAtmosDevices)
             {
-                Debug.Log($"Найден {device.GetTilePosition(bounds)} вместе с {pipe}");
+                Debug.Log($"РќР°Р№РґРµРЅ {device.GetTilePosition(bounds)} РІРјРµСЃС‚Рµ СЃ {pipe}");
                 if (device.GetTilePosition(bounds) == pipe)
                 {
-                    Debug.Log($"Сравнение {device.GetTilePosition(bounds)} успешно с {pipe}");
+                    Debug.Log($"РЎСЂР°РІРЅРµРЅРёРµ {device.GetTilePosition(bounds)} СѓСЃРїРµС€РЅРѕ СЃ {pipe}");
                     if (!allAtmosDevices.Contains(device))
                     {
                         allAtmosDevices.Add(device);
                         device.pipesNetwork = this;
-                        Debug.Log($"Добавлен {device.GetTilePosition(bounds)}, текущий счетчик труб: {allAtmosDevices.Count}");
+                        Debug.Log($"Р”РѕР±Р°РІР»РµРЅ {device.GetTilePosition(bounds)}, С‚РµРєСѓС‰РёР№ СЃС‡РµС‚С‡РёРє С‚СЂСѓР±: {allAtmosDevices.Count}");
                     }
                     break;
                 }
                 else
                 {
-                    Debug.Log($"Не найден {pipe} в системе, текущий счетчик труб: {allAtmosDevices.Count}");
+                    Debug.Log($"РќРµ РЅР°Р№РґРµРЅ {pipe} РІ СЃРёСЃС‚РµРјРµ, С‚РµРєСѓС‰РёР№ СЃС‡РµС‚С‡РёРє С‚СЂСѓР±: {allAtmosDevices.Count}");
                 }
             }
         }
+
+        volumeSystem = GetTrueList().Count * volumePipe;
+        Debug.Log(key + " = " + volumeSystem);
     }
 }

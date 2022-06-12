@@ -74,7 +74,7 @@ public class TileMapArray : MonoBehaviour
                 {
                     if (tilesGas[i, j] != null)
                     {
-                        tilesGas[i, j].PressureTransmission(tick_time);
+                        tilesGas[i, j].TransmissionGas(tick_time);
 
                         if (tilesGas[i, j].isActive)
                         {
@@ -245,7 +245,7 @@ public class TileMapArray : MonoBehaviour
             keyIntNetwork++;
             network.key = keyIntNetwork;
 
-            network.UpdateEndingPipesTrueList(bounds);
+            network.UpdateEndingPipesTrueListAndVolume(bounds);
         }
     }
 

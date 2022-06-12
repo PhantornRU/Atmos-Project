@@ -240,7 +240,7 @@ public class PlayerController : MonoBehaviour
                                 try
                                 {
                                     Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \nДобавляем газ по тайлу: {tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].name}");
-                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].UpdatePressure(500f); //добавляем давление
+                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].UpdateGas(500f, 0f); //добавляем давление
                                                                                                                          //tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].DeactivateBlockGas(); //деактивируем блок
                                 }
                                 catch (InvalidCastException e)

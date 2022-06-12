@@ -13,16 +13,22 @@ public class TileGas : TileObject
     public bool isActive = false;
     public bool isEmpty = false;
     [Space(height: 10f)]
-    [Min(0)] public float pressure = 101; //P - kPa
-    [Min(0)] public float concentrate = 255.0f; //n - число молей
+    [Min(0)] public float pressure = 101f; //P - kPa
     [Min(0)] public float temperature_K = 297.15f; //T - Температура по Кельвину, °K = °C + 273,15, Значение температуры абсолютного нуля — 0 °К, или −273,15 °C.
-    [Min(0)] private float litres; //V - Объём в литрах
+    [Min(0)] public float concentrate;//22.41f; //n - концентрация частиц, количество вещества, Моли.  n=(P*V)/(R*T)
+    [Min(0)] public float volume = 22.41f; //V - Объём в литрах - сколько места внутри одного тайла и сколько газа он может удерживать. 
+    const float volumeTile = 2500f; //Объем вместимости тайла
     const float gas_r = 8.31f; //R - Газовая постоянная, равная 8,31
+
+    //Формула уравнения состояния идеального газа PV = nRT, n = V/Vm, где Vm как раз = 22,41
+    //стандартное давление для газов, жидкостей и твёрдых тел, равное 105 Па (100 кПа, 1 бар);
+    //стандартная температура для газов, равная 293,15 К (20 °С, 32 °F);
+    //стандартная молярность для растворов, равная 1 моль/л. 1 моль = 22.41 литров при одинаковом объеме
+    //В 1-м кубометре = 1000 литров.
 
     [Header("Окружные тайлы")]
     [SerializeField]private TileGas[] massGas = new TileGas[8]; //!!!!!лучше ограничить до 4-ех, а то иначе проходит по диагонали!!!!!!!!!
     [Space(height: 10f)]
-    //public bool isBlockGas = false;
 
     [Header("Визуализирование")]
     public bool isNeedSmoke = true;
@@ -50,6 +56,17 @@ public class TileGas : TileObject
         tilePlace = _tilePlace; //индексы позиции
         //InitializeTilePlace(_tilePlace);
         name = $"{_name}{tilePlace}";
+
+        //концентрация веществ в моллях
+        concentrate = ConcentrateFormula();
+    }
+
+    /// <summary>
+    /// Формула рассчета концентрации веществ, моллей // n=(P*V)/(R*T)
+    /// </summary>
+    float ConcentrateFormula()
+    {
+        return (pressure * volume) / (gas_r * temperature_K);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -71,7 +88,7 @@ public class TileGas : TileObject
     ///<summary> 
     ///Методы передачи давления и перемещения объектов в тайл с пониженым давлением 
     ///</summary>
-    public void PressureTransmission(float tick_time)
+    public void TransmissionGas(float tick_time)
     {
         //проверяем не опустел ли наш тайл
         if (pressure <= 0)
@@ -91,12 +108,19 @@ public class TileGas : TileObject
                 if (massGas[num] != null && pressure > massGas[num].pressure + gasDiff)
                 {
                     //Debug.Log($"Изменен тайл {massGas[num].tilePlace}, давление {massGas[num].pressure}");
-                    float speedChange = SpeedGasChange(massGas[num].pressure, tick_time);
-                    pressure -= speedChange;
-                    massGas[num].UpdatePressure(speedChange);
+                    float speedPressureChange = SpeedPressureChange(massGas[num].pressure, tick_time);
+                    pressure -= speedPressureChange;
+
+                    float speedTemperatureChange = SpeedTemperatureChange(massGas[num].temperature_K, tick_time);
+                    temperature_K -= speedTemperatureChange;
+
+                    //float speedConcentrateChange = SpeedConcentrateChange(massGas[num].temperature_K, tick_time);
+                    //concentrate -= speedConcentrateChange;
+
+                    massGas[num].UpdateGas(speedPressureChange, speedTemperatureChange);
                     countActive++;
 
-                    PushAffectedBodies(num, tick_time, speedChange);
+                    PushAffectedBodies(num, tick_time, speedPressureChange);
                 }
             }
             //Вакуум. Уничтожаем газ пустыми тайлами из внутреннего массива !!!!!!НЕКОРРЕКТНО РАБОТАЕТ, НУЖНО ПЕРЕДЕЛАТЬ ПРОВЕРКИ!!!!
@@ -109,11 +133,15 @@ public class TileGas : TileObject
                 {
                     //Debug.Log($"Изменен тайл {massGas[num].tilePlace}, давление {massGas[num].pressure}");
                     //speedChange = (float)(1.414 * Mathf.Sqrt(pressure - massGas[num].pressure)) * tick_time * Time.deltaTime;
-                    float speedChange = SpeedGasChange(massGas[num].pressure, tick_time);
-                    pressure -= speedChange;
+                    float speedPressureChange = SpeedPressureChange(massGas[num].pressure, tick_time);
+                    pressure -= speedPressureChange;
+
+                    float speedTemperatureChange = SpeedTemperatureChange(massGas[num].temperature_K, tick_time);
+                    temperature_K -= speedTemperatureChange;
+
                     countActive++;
 
-                    PushAffectedBodies(num, tick_time, speedChange);
+                    PushAffectedBodies(num, tick_time, speedPressureChange);
                 }
             }
             //деактивируем тайл газа т.к. он больше никому не передает.
@@ -124,14 +152,26 @@ public class TileGas : TileObject
         }
     }
 
-    public void UpdatePressure(float _pressure)
+    public void UpdateGas(float _pressure, float _temperature_K)
     {
+        //if (volume)
         pressure += _pressure;
         TileChanged();
 
         if (isEmpty && _pressure > 0)
         {
             isEmpty = false;
+        }
+
+        if (temperature_K > 0) //если меньше абсолютного нуля, то не высчитывается
+        {
+            //float pressure_delta = (pressure - _pressure) / 2;
+            //float transfer_moles = pressure_delta * volume / (temperature_K * gas_r);
+
+            Debug.Log(concentrate);
+
+            //концентрация веществ в моллях
+            concentrate = ConcentrateFormula();
         }
     }
 
@@ -165,13 +205,23 @@ public class TileGas : TileObject
     }
 
     /// <summary>
-    /// Формула для рассчета смещения необходимого количества газа к тайлу газа toTileNumChange, из внутреннего массива газов.
+    /// Формула для рассчета смещения необходимого количества газа к тайлу газа toTilePressureChange, из внутреннего массива газов.
     /// </summary>
-    public float SpeedGasChange(float toTilePressureChange, float tick_time)
+    public float SpeedPressureChange(float toTilePressureChange, float tick_time)
     {
         //!!!!!здесь должна быть нормальная формула!!!!
         //speedChange = (float)(1.414 * Mathf.Sqrt(pressure - massGas[num].pressure)) * tick_time * Time.deltaTime;
         return 1.414f * Mathf.Abs(pressure - toTilePressureChange) * tick_time * Time.deltaTime;
+    }
+
+    /// <summary>
+    /// Формула для рассчета смещения необходимого количества газа к тайлу газа toTilePressureChange, из внутреннего массива газов.
+    /// </summary>
+    public float SpeedTemperatureChange(float toTileTemperatureChange, float tick_time)
+    {
+        //!!!!!здесь должна быть нормальная формула!!!!
+        //speedChange = (float)(1.414 * Mathf.Sqrt(pressure - massGas[num].pressure)) * tick_time * Time.deltaTime;
+        return 1.414f * Mathf.Abs(temperature_K - toTileTemperatureChange) * tick_time * Time.deltaTime;
     }
 
     /// <summary>
