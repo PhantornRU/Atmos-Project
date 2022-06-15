@@ -47,14 +47,14 @@ public class TilePipeNetwork : MonoBehaviour
             //Debug.Log($"Обновление системы труб [{key}], число девайсов: {allAtmosDevices.Count}");
             foreach (AtmosDevice device in allAtmosDevices)
             {
-                Debug.Log($"У системы труб [{key}] - обновлен девайс {device.transform.name}");
+                //Debug.Log($"У системы труб [{key}] - обновлен девайс {device.transform.name}");
                 ChangePressureGas(device);
             }
         }
-        else
-        {
-            Debug.Log($"У системы труб [{key}] - отсутствуют доступные девайсы, число девайсов: {allAtmosDevices.Count}");
-        }
+        //else
+        //{
+        //    Debug.Log($"У системы труб [{key}] - отсутствуют доступные девайсы, число девайсов: {allAtmosDevices.Count}");
+        //}
     }
 
     /// <summary>
@@ -239,25 +239,25 @@ public class TilePipeNetwork : MonoBehaviour
         //вносим девайс в список если он присутствует и определяем его систему
         foreach (Vector2Int pipe in pipesEndingList)
         {
-            Debug.Log("Текущая труба на " + pipe);
+            //Debug.Log("Текущая труба на " + pipe);
             foreach (AtmosDevice device in devicesManager.listAtmosDevices)
             {
-                Debug.Log($"Найден {device.GetTilePosition(bounds)} вместе с {pipe}");
+                //Debug.Log($"Найден {device.GetTilePosition(bounds)} вместе с {pipe}");
                 if (device.GetTilePosition(bounds) == pipe)
                 {
-                    Debug.Log($"Сравнение {device.GetTilePosition(bounds)} успешно с {pipe}");
+                    //Debug.Log($"Сравнение {device.GetTilePosition(bounds)} успешно с {pipe}");
                     if (!allAtmosDevices.Contains(device))
                     {
                         allAtmosDevices.Add(device);
                         device.pipesNetwork = this;
-                        Debug.Log($"Добавлен {device.GetTilePosition(bounds)}, текущий счетчик труб: {allAtmosDevices.Count}");
+                        //Debug.Log($"Добавлен {device.GetTilePosition(bounds)}, текущий счетчик труб: {allAtmosDevices.Count}");
                     }
                     break;
                 }
-                else
-                {
-                    Debug.Log($"Не найден {pipe} в системе, текущий счетчик труб: {allAtmosDevices.Count}");
-                }
+                //else
+                //{
+                //    Debug.Log($"Не найден {pipe} в системе, текущий счетчик труб: {allAtmosDevices.Count}");
+                //}
             }
         }
 

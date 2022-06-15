@@ -7,19 +7,15 @@ using UnityEngine.Tilemaps;
 [DisallowMultipleComponent]
 public class PlayerController : MonoBehaviour
 {
-    Camera mainCamera;
-    Rigidbody2D rb;
-    float horizontal, vertical;
-    TileMapArray tilesArray;
+    // менеджеры и скрипты
     ProjectInitializer projectInitializer;
+    TileMapArray tilesArray;
 
-    Vector2 moveVector;
+    //внутренные используемые переменные
+    Camera mainCamera;
 
-    [SerializeField]
-    float speed = 1000;
-
-    public Sprite[] sprites = new Sprite[4];
-
+    // параметры и скрипты игрока
+    PlayerMovement playerMovement;
     bool isInitialized = false;
 
     [Header("Тестовые объекты")]
@@ -43,9 +39,11 @@ public class PlayerController : MonoBehaviour
     public void Initialize()
     {
         mainCamera = Camera.main;
-        rb = GetComponent<Rigidbody2D>();
 
         CheckTileArray();
+
+        playerMovement = GetComponent<PlayerMovement>();
+        playerMovement.Initialize();
 
         isInitialized = true;
     }
@@ -59,47 +57,17 @@ public class PlayerController : MonoBehaviour
 
     float tick_curr_time; //Текущее время
 
-    private void FixedUpdate()
+    private void Update()
     {
-        //Проводимые операции если скрипт был обработан
         if (isInitialized)
         {
-            ChangeSprite();
-
-            horizontal = Input.GetAxis("Horizontal");
-            vertical = Input.GetAxis("Vertical");
-            moveVector = new Vector2(horizontal, vertical);
-            rb.AddForce(moveVector * speed * rb.mass * Time.deltaTime, ForceMode2D.Force);
-
-            mainCamera.transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -10);
-        }
-
-        //Методы нажатия на ЛКМ и ПКМ
-        tick_curr_time -= Time.deltaTime; // Вычитаем время кадра
-        if (tick_curr_time <= 0)
-        {
-            tick_curr_time = ProjectInitializer.tick_time;
-            ButtonsFunctions();
-        }
-    }
-
-    void ChangeSprite()
-    {
-        if (horizontal > 0 && horizontal > vertical)
-        {
-            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[2];
-        }
-        if (horizontal < 0 && horizontal < vertical)
-        {
-            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[3];
-        }
-        if (vertical > 0 && vertical > horizontal)
-        {
-            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[1];
-        }
-        if (vertical < 0 && vertical < horizontal)
-        {
-            gameObject.GetComponent<SpriteRenderer>().sprite = sprites[0];
+            //Методы нажатия на ЛКМ и ПКМ
+            tick_curr_time -= Time.deltaTime; // Вычитаем время кадра
+            if (tick_curr_time <= 0)
+            {
+                tick_curr_time = ProjectInitializer.tick_time;
+                ButtonsFunctions();
+            }
         }
     }
 

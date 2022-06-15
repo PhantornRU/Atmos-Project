@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 421103048358790870}
   - component: {fileID: -2284542646293574685}
   - component: {fileID: -993362595936619992}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: TileObjectWindow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,6 @@ MonoBehaviour:
   tilesArray: {fileID: 0}
   tilePlace: {x: 0, y: 0}
   isBlockGas: 1
-  isUnderTileVisible: 0
 --- !u!114 &-993362595936619992
 MonoBehaviour:
   m_ObjectHideFlags: 0
