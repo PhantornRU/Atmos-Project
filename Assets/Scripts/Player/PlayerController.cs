@@ -198,8 +198,6 @@ public class PlayerController : MonoBehaviour
                                 //tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].PressureTransmission(tilesArray.tick_time);
                                 tilesArray.map[0].SetTile(clickTileSetPosition, null); //убирание тайла пола и его GameObject
                             }
-
-
                             break;
                         }
                     case LeftClickMode.AddGas:

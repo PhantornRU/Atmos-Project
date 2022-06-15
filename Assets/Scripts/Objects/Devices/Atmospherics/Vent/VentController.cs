@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VentController : AtmosDevice
+public class VentController : AtmosDevice//, IInteractable
 {
     VentAnimator ventAnimator;
 
@@ -10,8 +10,7 @@ public class VentController : AtmosDevice
 
     public override void Initialize(BoundsInt bounds)
     {
-        Debug.Log($"{name} определен");
-        InitializeTilePlace(bounds);
+        base.Initialize(bounds);
 
         ventAnimator = GetComponent<VentAnimator>();
         ventAnimator.Initialize(isToggleOn, currentType, speedAnimation);

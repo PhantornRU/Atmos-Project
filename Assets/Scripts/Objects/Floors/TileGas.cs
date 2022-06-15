@@ -405,4 +405,11 @@ public class TileGas : TileObject
     {
         isActive = false;
     }
+
+    public override void ActivateBeforeDestroyed()
+    {
+        pressure = 0;
+        ActivateNearTiles();
+        base.ActivateBeforeDestroyed();
+    }
 }

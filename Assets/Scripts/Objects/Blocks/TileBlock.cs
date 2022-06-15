@@ -10,6 +10,9 @@ public class TileBlock : TileObject
     [Header("Тайловые данные")]
     public bool isBlockGas = true;
 
+    [Tooltip("Спрайты меняющие текущий спрайт при нанесении урона")]
+    public List<Sprite> spritesWall;
+
     /// <summary>
     /// Инициализация тайла блокиратора
     /// </summary>
@@ -29,6 +32,11 @@ public class TileBlock : TileObject
             tilesArray.tilesGas[tilePlace.x, tilePlace.y].ActivateBlockGas(); //блокиируем прохождение газа
             tilesArray.tilesGas[tilePlace.x, tilePlace.y].isNeedSmoke = false; //блокируем создание дыма
         }
+    }
+
+    private void ChangeSprite()
+    {
+
     }
 
     /// <summary>
@@ -55,5 +63,11 @@ public class TileBlock : TileObject
         {
             tilesArray.tilesGas[tilePlace.x, tilePlace.y].ActivateBlockGas();
         }
+    }
+
+    public override void ActivateBeforeDestroyed()
+    {
+        DeactivateBlockGas();
+        base.ActivateBeforeDestroyed();
     }
 }

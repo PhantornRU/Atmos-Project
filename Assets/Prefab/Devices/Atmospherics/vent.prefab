@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 354711405959447927}
   - component: {fileID: 354711405959447921}
   - component: {fileID: 354711405959447920}
+  - component: {fileID: -3035089502354193663}
   m_Layer: 0
   m_Name: vent
   m_TagString: Untagged
@@ -134,3 +135,17 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &-3035089502354193663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 354711405959447924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c455557227334f348ab6d1adb6de0cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialIntegrity: 100
+  soundOnHit: {fileID: 0}
