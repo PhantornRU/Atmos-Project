@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [DisallowMultipleComponent]
 [SelectionBase]
@@ -9,9 +10,7 @@ public class TileBlock : TileObject
 {
     [Header("Тайловые данные")]
     public bool isBlockGas = true;
-
-    [Tooltip("Спрайты меняющие текущий спрайт при нанесении урона")]
-    public List<Sprite> spritesWall;
+    public GameObject objectWhenDisassembly;
 
     /// <summary>
     /// Инициализация тайла блокиратора
@@ -27,16 +26,39 @@ public class TileBlock : TileObject
         name = $"{_name}{tilePlace}";
 
         //задаем параметры для тайлов газа где уже есть тайл
-        if (tilesArray.tilesGas[tilePlace.x, tilePlace.y] != null)
-        {   
-            tilesArray.tilesGas[tilePlace.x, tilePlace.y].ActivateBlockGas(); //блокиируем прохождение газа
-            tilesArray.tilesGas[tilePlace.x, tilePlace.y].isNeedSmoke = false; //блокируем создание дыма
-        }
+        ActivateBlockGas(); //блокиируем прохождение газа
     }
 
-    private void ChangeSprite()
-    {
+    [HideInInspector] public bool isNeedToDestroy = false;
 
+    public void Dissamble()
+    {
+        if (objectWhenDisassembly != null)
+        {
+            GameObject object_disassebmly = Instantiate(objectWhenDisassembly, transform);
+            object_disassebmly.transform.parent = transform.parent;
+            TileBlock tileBlock = object_disassebmly.GetComponent<TileBlock>();
+            tileBlock.Initialize(tilesArray, tilePlace, name);
+
+            tilesArray.tilesBlock[tilePlace.x, tilePlace.y] = tileBlock;
+
+            //Debug.Log("Создан объект " + object_disassebmly.name +" для разбора от: " + name);
+            isNeedToDestroy = true;
+            //ActivateBeforeDestroyed();
+        }
+        else
+        {
+            DisassemblyScript disassembly = GetComponent<DisassemblyScript>();
+            if (disassembly) // если не пуст, то проводим операцию дальше
+            {
+                //Debug.Log("Меняем состояние у: " + name);
+                disassembly.ChangeState();
+            }
+            else
+            {
+                Debug.Log("Отсутствует объект при разборе " + name);
+            }
+        }
     }
 
     /// <summary>
@@ -68,6 +90,7 @@ public class TileBlock : TileObject
     public override void ActivateBeforeDestroyed()
     {
         DeactivateBlockGas();
+
         base.ActivateBeforeDestroyed();
     }
 }

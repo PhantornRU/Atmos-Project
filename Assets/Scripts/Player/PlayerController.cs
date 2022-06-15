@@ -117,7 +117,7 @@ public class PlayerController : MonoBehaviour
             Vector3 clickWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int clickTilePosition = new Vector3Int((int)(tilesArray.transform.position.x + clickWorldPosition.x + Mathf.Abs(tilesArray.bounds.xMin)), 
                                                           (int)(tilesArray.transform.position.y + clickWorldPosition.y + Mathf.Abs(tilesArray.bounds.yMin)), 0);
-            Vector3Int clickCellPosition = tilesArray.map[0].WorldToCell(Input.mousePosition);
+            Vector3Int clickCellPosition = tilesArray.map[(int)TileMapArray.TileMapType.blocks].WorldToCell(Input.mousePosition);
             Vector3Int clickTileSetPosition = new Vector3Int((int)(tilesArray.transform.position.x + clickTilePosition.x - Mathf.Abs(tilesArray.bounds.xMin)),
                                                              (int)(tilesArray.transform.position.y + clickTilePosition.y - Mathf.Abs(tilesArray.bounds.yMin)), 0);
 
@@ -128,6 +128,7 @@ public class PlayerController : MonoBehaviour
                     case LeftClickMode.None:
                         {
                             Debug.Log($"Отсутствует режим на ЛКМ: {LCMode}");
+                            //tilesArray.TileRemove(clickTileSetPosition, (int)TileMapArray.TileMapType.blocks);
                             break;
                         }
                     case LeftClickMode.Interact:
@@ -143,7 +144,6 @@ public class PlayerController : MonoBehaviour
                                 {
                                     Debug.Log($"Выход за массив на тайле при обновлении {clickTilePosition}\nОшибка: {e}");
                                 }
-
                             break;
                         }
                     case LeftClickMode.Create:
@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour
                             //устанавливаем тайл
                             if (tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y] == null)
                             {
-                                int c_map = 0;
+                                int c_map = (int)TileMapArray.TileMapType.floor;
                                 tilesArray.map[c_map].SetTile(clickTileSetPosition, ruleTileLatice);
                                 tilesArray.TileAdd(clickTilePosition, c_map);
 
@@ -162,7 +162,7 @@ public class PlayerController : MonoBehaviour
                             }
                             else if (tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y] == null)
                             {
-                                int c_map = 1;
+                                int c_map = (int)TileMapArray.TileMapType.blocks;
                                 tilesArray.map[c_map].SetTile(clickTileSetPosition, ruleTileWall);
                                 tilesArray.TileAdd(clickTilePosition, c_map);
 
@@ -183,20 +183,28 @@ public class PlayerController : MonoBehaviour
                             //убираем тайл
                             if (tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y] != null)
                             {
-                                tilesArray.map[1].SetTile(clickTileSetPosition, null); //убирание тайла стены и его GameObject
-                                tilesArray.map[1].GetComponent<TilemapCollider2D>().ProcessTilemapChanges(); //Обновляем тайлмап коллайдер
-
-                                //включаем дым под тайлом если он есть
-                                if (tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].smokeObject.activeInHierarchy == false)
+                                tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y].Dissamble();
+                                if (tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y].isNeedToDestroy)
                                 {
-                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].smokeObject.SetActive(true);
+                                    int c_map = (int)TileMapArray.TileMapType.blocks;
+                                    tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y].ActivateBeforeDestroyed();
+                                    tilesArray.TileRemove(clickTileSetPosition, clickTilePosition, c_map);
+
+                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].CreateSmoke();
+                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].CreateText();
                                 }
+                                //int c_map = (int)TileMapArray.TileMapType.blocks;
+                                //tilesArray.map[c_map].SetTile(clickTileSetPosition, null); //убирание тайла стены и его GameObject
+                                //tilesArray.map[c_map].GetComponent<TilemapCollider2D>().ProcessTilemapChanges(); //Обновляем тайлмап коллайдер
+
                             }
                             else if (tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y] != null)
                             {
+                                int c_map = (int)TileMapArray.TileMapType.floor;
                                 //tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].UpdatePressure(0); //обновляем чтобы окружающие тайлы обновились
                                 //tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].PressureTransmission(tilesArray.tick_time);
-                                tilesArray.map[0].SetTile(clickTileSetPosition, null); //убирание тайла пола и его GameObject
+                                //tilesArray.map[c_map].SetTile(clickTileSetPosition, null); //убирание тайла пола и его GameObject
+                                tilesArray.TileRemove(clickTileSetPosition, clickTilePosition, c_map);
                             }
                             break;
                         }

@@ -36,7 +36,7 @@ public class TileGas : TileObject
     public GameObject smokeObject; //дым
     private SpriteRenderer smokeSprite;
     public Canvas canvasText;
-    private Text textObject; //текст
+    public Text textObject; //текст
 
     [Header("Функции для рассчетов")]
     const float gasDiff = 1.5f; //Разница между давлениями для запуска рассчетов
@@ -168,7 +168,7 @@ public class TileGas : TileObject
             //float pressure_delta = (pressure - _pressure) / 2;
             //float transfer_moles = pressure_delta * volume / (temperature_K * gas_r);
 
-            Debug.Log(concentrate);
+            //Debug.Log(concentrate);
 
             //концентрация веществ в моллях
             concentrate = ConcentrateFormula();
@@ -273,7 +273,7 @@ public class TileGas : TileObject
     /// </summary>
     public void CreateText()
     {
-        if (isNeedText)
+        if (isNeedText && !CheckGasBlock(tilePlace.x, tilePlace.y))
         {
             //создание текста
             Canvas canvObject = Instantiate(canvasText, transform.position, Quaternion.identity);
@@ -393,6 +393,25 @@ public class TileGas : TileObject
     /// </summary>
     public void DeactivateBlockGas()
     {
+        //обновляем цвет дыма и текст
+        if (smokeObject.activeInHierarchy && textObject.isActiveAndEnabled)
+        {
+            Debug.Log("Обновление при деактивации тайла газа у" + name);
+            UpdateSmoke();
+            UpdateText();
+        }
+        else
+        {
+            Debug.Log("Создание при деактивации тайла газа у" + name);
+            //isNeedSmoke = true;
+            //isNeedText = true;
+            //CreateSmoke();
+            //CreateText();
+            //smokeObject.SetActive(true);
+            //textObject.gameObject.SetActive(true);
+            //UpdateSmoke();
+            //UpdateText();
+        }
 
         isActive = true;
         TileChanged(); //запускаем обработку передачи давления на тайле

@@ -32,7 +32,7 @@ public class TileMapArray : MonoBehaviour
     public int countActivate; //Счет невозможных тайлов для обновление
 
     //Типы ТайлМапов по нумерациям !!!лучше переделать с определением типа из получаемого списка!!!
-    enum TileMapType
+    public enum TileMapType
     {
         floor,  //0
         blocks, //1 walls & windows
@@ -102,11 +102,11 @@ public class TileMapArray : MonoBehaviour
     private void TilesBoundsCreate()
     {
         //установление границ
-        map[0].CompressBounds();
-        bounds = map[0].cellBounds;
+        map[(int)TileMapType.floor].CompressBounds();
+        bounds = map[(int)TileMapType.floor].cellBounds;
         foreach (Tilemap c_map in map)
         {
-            if (c_map != map[0])
+            if (c_map != map[(int)TileMapType.floor])
             {
                 c_map.CompressBounds();
                 if (bounds.xMax < c_map.cellBounds.max.x) bounds.xMax = c_map.cellBounds.max.x;
@@ -255,7 +255,7 @@ public class TileMapArray : MonoBehaviour
     private void TilesArrayInitializeCreateVisualization()
     {
         //проверяем все объекты в слое пола
-        foreach (Transform c_object in map[0].transform)
+        foreach (Transform c_object in map[(int)TileMapType.floor].transform)
         {
             //матрица координат
             int px = (int)(c_object.position.x + Mathf.Abs(bounds.xMin));
@@ -289,6 +289,23 @@ public class TileMapArray : MonoBehaviour
             TileCheckMapAndAddToMatrix(tilePosition.x, tilePosition.y, tileMapNumber, c_object);
             Debug.Log($"В матрицу добавлен тайл {c_object.name}");
             break;
+        }
+    }
+    /// <summary>
+    /// Добавление нового тайла в матрицу
+    /// </summary>
+    public void TileRemove(Vector3Int positionTile, Vector3Int place, int tileMapNumber)
+    {
+        map[tileMapNumber].SetTile(positionTile, null); //убирание тайла стены и его GameObject
+
+        if (tileMapNumber == (int)TileMapType.blocks)
+        {
+            map[tileMapNumber].GetComponent<TilemapCollider2D>().ProcessTilemapChanges(); //Обновляем тайлмап коллайдер
+            //включаем дым под тайлом если он есть
+            if (tilesGas[place.x, place.y].smokeObject.activeInHierarchy == false)
+            {
+                tilesGas[place.x, place.y].smokeObject.SetActive(true);
+            }
         }
     }
 

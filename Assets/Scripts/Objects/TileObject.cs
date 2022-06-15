@@ -48,7 +48,10 @@ public class TileObject : MonoBehaviour, IDamageable<float>
 
     private void OnDestroy()
     {
-        ActivateBeforeDestroyed();
+        if (tilesArray != null)
+        {
+            ActivateBeforeDestroyed();
+        }
     }
 
     /// <summary>
@@ -56,8 +59,8 @@ public class TileObject : MonoBehaviour, IDamageable<float>
     /// </summary>
     public virtual void ActivateBeforeDestroyed()
     {
-        Debug.Log($"Уничтожен объект {name}");
+        //Debug.Log($"Уничтожен объект {name}");
 
-        Destroy(this);
+        Destroy(this.gameObject);
     }
 }

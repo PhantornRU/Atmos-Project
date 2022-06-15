@@ -47,6 +47,7 @@ MonoBehaviour:
   tilesArray: {fileID: 0}
   tilePlace: {x: 0, y: 0}
   isBlockGas: 1
+  objectWhenDisassembly: {fileID: 3589734689730788311, guid: b235d15249f588d41968396a6d9c0156, type: 3}
 --- !u!114 &5970542477104857518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,3 +60,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c455557227334f348ab6d1adb6de0cf5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  initialIntegrity: 100
+  soundOnHit: {fileID: 0}
