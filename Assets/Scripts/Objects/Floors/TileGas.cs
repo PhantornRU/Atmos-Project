@@ -400,18 +400,6 @@ public class TileGas : TileObject
             UpdateSmoke();
             UpdateText();
         }
-        else
-        {
-            Debug.Log("Создание при деактивации тайла газа у" + name);
-            //isNeedSmoke = true;
-            //isNeedText = true;
-            //CreateSmoke();
-            //CreateText();
-            //smokeObject.SetActive(true);
-            //textObject.gameObject.SetActive(true);
-            //UpdateSmoke();
-            //UpdateText();
-        }
 
         isActive = true;
         TileChanged(); //запускаем обработку передачи давления на тайле

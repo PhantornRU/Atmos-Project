@@ -12,6 +12,9 @@ public class TileBlock : TileObject
     public bool isBlockGas = true;
     public GameObject objectWhenDisassembly;
 
+    [HideInInspector] public bool isNeedToDestroy = false;
+    [HideInInspector] public bool isNeedToComplete = false;
+
     /// <summary>
     /// Инициализация тайла блокиратора
     /// </summary>
@@ -29,9 +32,9 @@ public class TileBlock : TileObject
         ActivateBlockGas(); //блокиируем прохождение газа
     }
 
-    [HideInInspector] public bool isNeedToDestroy = false;
+    AssemblyScript assemblyScript;
 
-    public void Dissamble()
+    public void Diassamble()
     {
         if (objectWhenDisassembly != null)
         {
@@ -48,16 +51,31 @@ public class TileBlock : TileObject
         }
         else
         {
-            DisassemblyScript disassembly = GetComponent<DisassemblyScript>();
-            if (disassembly) // если не пуст, то проводим операцию дальше
+            //присваиваем текущий скрипт
+            if (assemblyScript == null)
+            {
+                assemblyScript = GetComponent<AssemblyScript>();
+            }
+            else // если не пуст, то проводим операцию дальше
             {
                 //Debug.Log("Меняем состояние у: " + name);
-                disassembly.ChangeState();
+                assemblyScript.DisassemblyState();
             }
-            else
-            {
-                Debug.Log("Отсутствует объект при разборе " + name);
-            }
+        }
+    }
+
+    public void Assamble()
+    {
+        //если скрипт равен null, то действий не производим
+        if (assemblyScript == null)
+        {
+            //assemblyScript = GetComponent<AssemblyScript>();
+            Debug.Log("Отсутствует ассембл, действие не произведено");
+        }
+        //если скрипт уже присвоен после разборки
+        else
+        {
+            assemblyScript.AssemblyState();
         }
     }
 

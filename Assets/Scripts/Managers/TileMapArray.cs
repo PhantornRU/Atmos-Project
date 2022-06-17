@@ -285,7 +285,6 @@ public class TileMapArray : MonoBehaviour
             }
 
             //Получаем объект и заносим его в нужный массив
-
             TileCheckMapAndAddToMatrix(tilePosition.x, tilePosition.y, tileMapNumber, c_object);
             Debug.Log($"В матрицу добавлен тайл {c_object.name}");
             break;
@@ -308,6 +307,21 @@ public class TileMapArray : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    /// Заменяет текущий тайл на новый тайл
+    /// </summary>
+    //public void TileReplace(Vector3Int position, int tileMapNumber)
+    //{
+    //    //позиция тайла из матрицы
+    //    Vector2Int tilePosition = new Vector2Int((int)(c_object.position.x + Mathf.Abs(bounds.xMin)),
+    //                                             (int)(c_object.position.y + Mathf.Abs(bounds.yMin)));
+
+    //    //Получаем объект и заносим его в нужный массив
+
+    //    TileCheckMapAndAddToMatrix(tilePosition.x, tilePosition.y, tileMapNumber, c_object);
+    //    Debug.Log($"В матрице заменен тайл {c_object.name}");
+    //}
 
     private void TileCheckMapAndAddToMatrix(int px, int py, int c_map, Transform c_object)
     {

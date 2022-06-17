@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     PlayerMovement playerMovement;
     bool isInitialized = false;
 
-    [Header("Тестовые объекты")]
+    [Header("Объекты для создания")]
     public RuleTile ruleTileLatice;
     public RuleTile ruleTileWall;
 
@@ -27,11 +27,12 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Режимы доступные по нажатию на левую кнопку мыши
     /// </summary>
-    private enum LeftClickMode
+    public enum LeftClickMode
     {
         None,
         Interact,
-        Damage,
+        Disassembly,
+        Assembly,
         Create,
         AddGas
     }
@@ -115,111 +116,116 @@ public class PlayerController : MonoBehaviour
         {
             //получение координат и позиции
             Vector3 clickWorldPosition = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            Vector3Int clickTilePosition = new Vector3Int((int)(tilesArray.transform.position.x + clickWorldPosition.x + Mathf.Abs(tilesArray.bounds.xMin)), 
+            Vector3Int clickTilePlacePosition = new Vector3Int((int)(tilesArray.transform.position.x + clickWorldPosition.x + Mathf.Abs(tilesArray.bounds.xMin)), 
                                                           (int)(tilesArray.transform.position.y + clickWorldPosition.y + Mathf.Abs(tilesArray.bounds.yMin)), 0);
             Vector3Int clickCellPosition = tilesArray.map[(int)TileMapArray.TileMapType.blocks].WorldToCell(Input.mousePosition);
-            Vector3Int clickTileSetPosition = new Vector3Int((int)(tilesArray.transform.position.x + clickTilePosition.x - Mathf.Abs(tilesArray.bounds.xMin)),
-                                                             (int)(tilesArray.transform.position.y + clickTilePosition.y - Mathf.Abs(tilesArray.bounds.yMin)), 0);
+            Vector3Int clickTileArrayPosition = new Vector3Int((int)(tilesArray.transform.position.x + clickTilePlacePosition.x - Mathf.Abs(tilesArray.bounds.xMin)),
+                                                             (int)(tilesArray.transform.position.y + clickTilePlacePosition.y - Mathf.Abs(tilesArray.bounds.yMin)), 0);
 
-            if (CheckInArrayBounds(clickTileSetPosition))
+            if (CheckInArrayBounds(clickTileArrayPosition))
             {
                 switch (LCMode)
                 {
                     case LeftClickMode.None:
                         {
                             Debug.Log($"Отсутствует режим на ЛКМ: {LCMode}");
-                            //tilesArray.TileRemove(clickTileSetPosition, (int)TileMapArray.TileMapType.blocks);
+                            //tilesArray.TileRemove(clickTileArrayPosition, (int)TileMapArray.TileMapType.blocks);
                             break;
                         }
                     case LeftClickMode.Interact:
                         {
-                            Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \n Взаимодействие с тайлом [{clickTilePosition.x}, {clickTilePosition.y}]");
+                            Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \n Взаимодействие с тайлом [{clickTilePlacePosition.x}, {clickTilePlacePosition.y}]");
 
-                            if (tilesArray.tilesDoor[clickTilePosition.x, clickTilePosition.y] != null)
+                            if (tilesArray.tilesDoor[clickTilePlacePosition.x, clickTilePlacePosition.y] != null)
                                 try
                                 {
-                                    tilesArray.tilesDoor[clickTilePosition.x, clickTilePosition.y].ChangeState();
+                                    tilesArray.tilesDoor[clickTilePlacePosition.x, clickTilePlacePosition.y].ChangeState();
                                 }
                                 catch (InvalidCastException e)
                                 {
-                                    Debug.Log($"Выход за массив на тайле при обновлении {clickTilePosition}\nОшибка: {e}");
+                                    Debug.Log($"Выход за массив на тайле при обновлении {clickTilePlacePosition}\nОшибка: {e}");
                                 }
                             break;
                         }
                     case LeftClickMode.Create:
                         {
-                            Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \n Создание по тайлу [{clickTilePosition.x}, {clickTilePosition.y}]");
-                            //Debug.Log($"Создание тестового тайла TileSet: [{clickTileSetPosition.x}, {clickTileSetPosition.y}], Tile: [{clickTilePosition.x}, {clickTilePosition.y}], World: [{clickWorldPosition.x}, {clickCellPosition.y}], cell: [{clickCellPosition.x}, {clickWorldPosition.y}]");
+                            Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \n Создание по тайлу [{clickTilePlacePosition.x}, {clickTilePlacePosition.y}]");
+                            //Debug.Log($"Создание тестового тайла TileSet: [{clickTileArrayPosition.x}, {clickTileArrayPosition.y}], Tile: [{clickTilePlacePosition.x}, {clickTilePlacePosition.y}], World: [{clickWorldPosition.x}, {clickCellPosition.y}], cell: [{clickCellPosition.x}, {clickWorldPosition.y}]");
 
                             //устанавливаем тайл
-                            if (tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y] == null)
+                            if (tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y] == null)
                             {
                                 int c_map = (int)TileMapArray.TileMapType.floor;
-                                tilesArray.map[c_map].SetTile(clickTileSetPosition, ruleTileLatice);
-                                tilesArray.TileAdd(clickTilePosition, c_map);
-
-
+                                tilesArray.map[c_map].SetTile(clickTileArrayPosition, ruleTileLatice);
+                                tilesArray.TileAdd(clickTilePlacePosition, c_map);
                             }
-                            else if (tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y] == null)
+                            else if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y] == null)
                             {
-                                int c_map = (int)TileMapArray.TileMapType.blocks;
-                                tilesArray.map[c_map].SetTile(clickTileSetPosition, ruleTileWall);
-                                tilesArray.TileAdd(clickTilePosition, c_map);
-
-                                tilesArray.map[c_map].GetComponent<TilemapCollider2D>().ProcessTilemapChanges(); //Обновляем тайлмап коллайдер
-
-                                //отключаем дым под тайлом если он есть
-                                if (tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].smokeObject.activeInHierarchy == true)
-                                {
-                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].smokeObject.SetActive(false);
-                                }
+                                CreateWall(clickTilePlacePosition, clickTileArrayPosition, ruleTileWall);
                             }
                             break;
                         }
-                    case LeftClickMode.Damage:
+                    case LeftClickMode.Disassembly:
                         {
-                            Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \n Нанесен урон по тайлу [{clickTilePosition.x}, {clickTilePosition.y}]");
+                            Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \n Разобран тайл [{clickTilePlacePosition.x}, {clickTilePlacePosition.y}]");
 
-                            //убираем тайл
-                            if (tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y] != null)
+                            //разбираем тайл
+                            if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y] != null)
                             {
-                                tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y].Dissamble();
-                                if (tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y].isNeedToDestroy)
+                                tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].Diassamble();
+                                if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].isNeedToDestroy)
                                 {
                                     int c_map = (int)TileMapArray.TileMapType.blocks;
-                                    tilesArray.tilesBlock[clickTilePosition.x, clickTilePosition.y].ActivateBeforeDestroyed();
-                                    tilesArray.TileRemove(clickTileSetPosition, clickTilePosition, c_map);
+                                    tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].ActivateBeforeDestroyed();
+                                    tilesArray.TileRemove(clickTileArrayPosition, clickTilePlacePosition, c_map);
 
-                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].CreateSmoke();
-                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].CreateText();
+                                    tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y].CreateSmoke();
+                                    tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y].CreateText();
                                 }
-                                //int c_map = (int)TileMapArray.TileMapType.blocks;
-                                //tilesArray.map[c_map].SetTile(clickTileSetPosition, null); //убирание тайла стены и его GameObject
-                                //tilesArray.map[c_map].GetComponent<TilemapCollider2D>().ProcessTilemapChanges(); //Обновляем тайлмап коллайдер
-
-                            }
-                            else if (tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y] != null)
+                            } //или убираем его
+                            else if (tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y] != null)
                             {
                                 int c_map = (int)TileMapArray.TileMapType.floor;
-                                //tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].UpdatePressure(0); //обновляем чтобы окружающие тайлы обновились
-                                //tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].PressureTransmission(tilesArray.tick_time);
-                                //tilesArray.map[c_map].SetTile(clickTileSetPosition, null); //убирание тайла пола и его GameObject
-                                tilesArray.TileRemove(clickTileSetPosition, clickTilePosition, c_map);
+                                tilesArray.TileRemove(clickTileArrayPosition, clickTilePlacePosition, c_map);
+                            }
+                            break;
+                        }
+                    case LeftClickMode.Assembly:
+                        {
+                            Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \n Собран тайл [{clickTilePlacePosition.x}, {clickTilePlacePosition.y}]");
+
+                            //собираем тайл
+                            if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y] != null)
+                            {
+                                tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].Assamble();
+                                if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].isNeedToComplete)
+                                {
+                                    int c_map = (int)TileMapArray.TileMapType.blocks;
+                                    Debug.Log($"Создания тайла по: [clickTilePlacePosition:{clickTilePlacePosition}, clickTileArrayPosition:{clickTileArrayPosition}]");
+                                    Destroy(tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].gameObject);
+                                    CreateWall(clickTilePlacePosition, clickTileArrayPosition, ruleTileWall);
+                                }
+                            }
+
+                            //повторно собираем тайл завершающим нажатием, занося его в массив и задавая ему необходимые данные, иначе сбор невозможен
+                            if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y] == null)
+                            {
+                                CreateWall(clickTilePlacePosition, clickTileArrayPosition, ruleTileWall);
                             }
                             break;
                         }
                     case LeftClickMode.AddGas:
                         {
-                            if (tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y] != null)
+                            if (tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y] != null)
                                 try
                                 {
-                                    Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \nДобавляем газ по тайлу: {tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].name}");
-                                    tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].UpdateGas(500f, 0f); //добавляем давление
-                                                                                                                         //tilesArray.tilesGas[clickTilePosition.x, clickTilePosition.y].DeactivateBlockGas(); //деактивируем блок
+                                    Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \nДобавляем газ по тайлу: {tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y].name}");
+                                    tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y].UpdateGas(500f, 0f); //добавляем давление
+                                                                                                                         //tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y].DeactivateBlockGas(); //деактивируем блок
                                 }
                                 catch (InvalidCastException e)
                                 {
-                                    Debug.Log($"Выход за массив на тайле при обновлении {clickTilePosition}\nОшибка: {e}");
+                                    Debug.Log($"Выход за массив на тайле при обновлении {clickTilePlacePosition}\nОшибка: {e}");
                                 }
 
 
@@ -256,10 +262,29 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    //Модя для включения на кнопках
-    public void DeleteMode()
+    private void CreateWall(Vector3Int clickTilePlacePosition, Vector3Int clickTileArrayPosition, RuleTile ruleTileWall)
     {
-        LCMode = LeftClickMode.Damage;
+        int c_map = (int)TileMapArray.TileMapType.blocks;
+        tilesArray.map[c_map].SetTile(clickTileArrayPosition, ruleTileWall);
+        tilesArray.TileAdd(clickTilePlacePosition, c_map);
+        tilesArray.map[c_map].GetComponent<TilemapCollider2D>().ProcessTilemapChanges(); //Обновляем тайлмап коллайдер
+
+        //отключаем дым под тайлом если он есть
+        if (tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y].smokeObject.activeInHierarchy == true)
+        {
+            tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y].smokeObject.SetActive(false);
+        }
+    }
+
+    //Моды для включения на кнопках
+    public void DisassemblyMode()
+    {
+        LCMode = LeftClickMode.Disassembly;
+        Debug.Log($"Текущий режим левой кнопки мыши игрока: {LCMode}");
+    }
+    public void AssemblyMode()
+    {
+        LCMode = LeftClickMode.Assembly;
         Debug.Log($"Текущий режим левой кнопки мыши игрока: {LCMode}");
     }
     public void CreateMode()
