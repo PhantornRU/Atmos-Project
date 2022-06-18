@@ -88,7 +88,7 @@ public class TileGas : TileObject
     ///<summary> 
     ///Методы передачи давления и перемещения объектов в тайл с пониженым давлением 
     ///</summary>
-    public void TransmissionGas(float tick_time)
+    public void TransmissionGas(float tick_time, bool isNeedVisual)
     {
         //проверяем не опустел ли наш тайл
         if (pressure <= 0)
@@ -121,6 +121,9 @@ public class TileGas : TileObject
                     countActive++;
 
                     PushAffectedBodies(num, tick_time, speedPressureChange);
+
+                    //Обновляем визуализаторы
+                    VisualUpdate(isNeedVisual);
                 }
             }
             //Вакуум. Уничтожаем газ пустыми тайлами из внутреннего массива !!!!!!НЕКОРРЕКТНО РАБОТАЕТ, НУЖНО ПЕРЕДЕЛАТЬ ПРОВЕРКИ!!!!
@@ -141,6 +144,10 @@ public class TileGas : TileObject
 
                     countActive++;
 
+                    //Обновляем визуализаторы
+                    VisualUpdate(isNeedVisual);
+
+                    //Толкаем объекты на тайле
                     PushAffectedBodies(num, tick_time, speedPressureChange);
                 }
             }
@@ -187,15 +194,36 @@ public class TileGas : TileObject
             ActivateNearTiles();
         }
 
-        //обновляем цвет дыма и текст
-        if (smokeObject.activeInHierarchy && textObject.isActiveAndEnabled)
-        {
-            UpdateSmoke();
-            UpdateText();
-        }
+        //Обновляем визуализаторы
+        //VisualUpdate(true);
 
         //передаем тайл мапу что необходимо провести обновления тайлов
         //if (!tilesArray.isNeedUpdateArray) tilesArray.isNeedUpdateArray = true;
+    }
+
+    void VisualUpdate(bool isNeedVisualUpdate)
+    {
+        //обновляем цвет дыма и текст
+        if (smokeObject.activeInHierarchy && textObject.isActiveAndEnabled)
+        {
+            if (isNeedVisualUpdate)
+            {
+                UpdateSmoke();
+                UpdateText();
+            }
+            else
+            {
+                smokeObject.SetActive(false);
+                textObject.gameObject.SetActive(false);
+            }
+        }
+        else if (isNeedVisualUpdate)
+        {
+            smokeObject.SetActive(true);
+            textObject.gameObject.SetActive(true);
+            UpdateSmoke();
+            UpdateText();
+        }
     }
 
     bool CheckGasBlock(int x, int y)

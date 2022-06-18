@@ -7,22 +7,26 @@ using UnityEngine.Tilemaps;
 [DisallowMultipleComponent]
 public class PlayerController : MonoBehaviour
 {
+    [Header("Параметры игрока")]
+    [Min(0)] public int health = 100;
+    [Min(0)] public int healthMax = 100;
     // менеджеры и скрипты
     ProjectInitializer projectInitializer;
-    TileMapArray tilesArray;
+    [HideInInspector] public TileMapArray tilesArray;
 
     //внутренные используемые переменные
     Camera mainCamera;
 
     // параметры и скрипты игрока
     PlayerMovement playerMovement;
+    PlayerInterfaceScript playerInterface;
     bool isInitialized = false;
 
     [Header("Объекты для создания")]
     public RuleTile ruleTileLatice;
     public RuleTile ruleTileWall;
 
-    LeftClickMode LCMode = LeftClickMode.None;
+    public LeftClickMode LCMode = LeftClickMode.None;
 
     /// <summary>
     /// Режимы доступные по нажатию на левую кнопку мыши
@@ -33,8 +37,9 @@ public class PlayerController : MonoBehaviour
         Interact,
         Disassembly,
         Assembly,
-        Create,
-        AddGas
+        DebugCreate,
+        DebugDelete,
+        DebugAddGas
     }
 
     public void Initialize()
@@ -46,7 +51,11 @@ public class PlayerController : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         playerMovement.Initialize();
 
+        playerInterface = GetComponent<PlayerInterfaceScript>();
+
         isInitialized = true;
+
+        playerInterface.ChangeHealthUI(health, healthMax);
     }
 
     private void Start()
@@ -147,10 +156,9 @@ public class PlayerController : MonoBehaviour
                                 }
                             break;
                         }
-                    case LeftClickMode.Create:
+                    case LeftClickMode.DebugCreate:
                         {
                             Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \n Создание по тайлу [{clickTilePlacePosition.x}, {clickTilePlacePosition.y}]");
-                            //Debug.Log($"Создание тестового тайла TileSet: [{clickTileArrayPosition.x}, {clickTileArrayPosition.y}], Tile: [{clickTilePlacePosition.x}, {clickTilePlacePosition.y}], World: [{clickWorldPosition.x}, {clickCellPosition.y}], cell: [{clickCellPosition.x}, {clickWorldPosition.y}]");
 
                             //устанавливаем тайл
                             if (tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y] == null)
@@ -162,6 +170,23 @@ public class PlayerController : MonoBehaviour
                             else if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y] == null)
                             {
                                 CreateWall(clickTilePlacePosition, clickTileArrayPosition, ruleTileWall);
+                            }
+                            break;
+                        }
+                    case LeftClickMode.DebugDelete:
+                        {
+                            Debug.Log($"Произведено действие игрока на ЛКМ: {LCMode} \n Удаление по тайлу [{clickTilePlacePosition.x}, {clickTilePlacePosition.y}]");
+
+                            //разбираем тайл
+                            if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y] != null)
+                            {
+                                int c_map = (int)TileMapArray.TileMapType.blocks;
+                                tilesArray.TileRemove(clickTileArrayPosition, clickTilePlacePosition, c_map);
+                            } //или убираем его
+                            else if (tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y] != null)
+                            {
+                                int c_map = (int)TileMapArray.TileMapType.floor;
+                                tilesArray.TileRemove(clickTileArrayPosition, clickTilePlacePosition, c_map);
                             }
                             break;
                         }
@@ -214,7 +239,7 @@ public class PlayerController : MonoBehaviour
                             }
                             break;
                         }
-                    case LeftClickMode.AddGas:
+                    case LeftClickMode.DebugAddGas:
                         {
                             if (tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y] != null)
                                 try
@@ -274,38 +299,6 @@ public class PlayerController : MonoBehaviour
         {
             tilesArray.tilesGas[clickTilePlacePosition.x, clickTilePlacePosition.y].smokeObject.SetActive(false);
         }
-    }
-
-    //Моды для включения на кнопках
-    public void DisassemblyMode()
-    {
-        LCMode = LeftClickMode.Disassembly;
-        Debug.Log($"Текущий режим левой кнопки мыши игрока: {LCMode}");
-    }
-    public void AssemblyMode()
-    {
-        LCMode = LeftClickMode.Assembly;
-        Debug.Log($"Текущий режим левой кнопки мыши игрока: {LCMode}");
-    }
-    public void CreateMode()
-    {
-        LCMode = LeftClickMode.Create;
-        Debug.Log($"Текущий режим левой кнопки мыши игрока: {LCMode}");
-    }
-    public void InteractMode()
-    {
-        LCMode = LeftClickMode.Interact;
-        Debug.Log($"Текущий режим левой кнопки мыши игрока: {LCMode}");
-    }
-    public void AddGasMode()
-    {
-        LCMode = LeftClickMode.AddGas;
-        Debug.Log($"Текущий режим левой кнопки мыши игрока: {LCMode}");
-    }
-    public void DefaultMode()
-    {
-        LCMode = LeftClickMode.None;
-        Debug.Log($"Текущий режим левой кнопки мыши игрока: {LCMode}");
     }
 
     private bool CheckInArrayBounds(Vector3Int position)

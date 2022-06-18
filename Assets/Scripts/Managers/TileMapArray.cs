@@ -59,6 +59,42 @@ public class TileMapArray : MonoBehaviour
         isInitializeCompleted = true;
     }
 
+    [HideInInspector] public bool isUpdateVisual = true;
+
+    public void ToggleVisual()
+    {
+        isUpdateVisual = !isUpdateVisual;
+
+        //переключаем все дымы и текста у газов
+        for (int i = 0; i < tilesGas.Length; i++)
+        {
+            for (int j = 0; j < tilesGas.Length; j++)
+            {
+                try
+                {
+                    if (tilesGas[i, j] != null)
+                    {
+                        if (tilesGas[i, j].smokeObject.activeInHierarchy && tilesGas[i, j].textObject.isActiveAndEnabled)
+                        {
+                            tilesGas[i, j].smokeObject.SetActive(false);
+                            tilesGas[i, j].textObject.gameObject.SetActive(false);
+                        }
+                        else
+                        {
+                            tilesGas[i, j].smokeObject.SetActive(true);
+                            tilesGas[i, j].textObject.gameObject.SetActive(true);
+                        }
+                    }
+                }
+                catch
+                {
+                    continue;
+                }
+            }
+        }
+    }
+
+
     /// <summary>
     /// Обновление массива тайлов по границам
     /// </summary>
@@ -74,7 +110,7 @@ public class TileMapArray : MonoBehaviour
                 {
                     if (tilesGas[i, j] != null)
                     {
-                        tilesGas[i, j].TransmissionGas(tick_time);
+                        tilesGas[i, j].TransmissionGas(tick_time, isUpdateVisual);
 
                         if (tilesGas[i, j].isActive)
                         {
@@ -303,7 +339,7 @@ public class TileMapArray : MonoBehaviour
             //включаем дым под тайлом если он есть
             if (tilesGas[place.x, place.y].smokeObject.activeInHierarchy == false)
             {
-                tilesGas[place.x, place.y].smokeObject.SetActive(true);
+                tilesGas[place.x, place.y].DeactivateBlockGas();
             }
         }
     }
