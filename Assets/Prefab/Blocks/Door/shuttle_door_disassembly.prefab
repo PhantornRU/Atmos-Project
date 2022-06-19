@@ -12,11 +12,10 @@ GameObject:
   - component: {fileID: 3589734689730788309}
   - component: {fileID: 3589734689730788310}
   - component: {fileID: -2206187167667039215}
-  - component: {fileID: -6466032925134522295}
-  - component: {fileID: 2131742223534186287}
-  - component: {fileID: 2532607812588440597}
+  - component: {fileID: 5756004421785252263}
+  - component: {fileID: -4608299578847478550}
   m_Layer: 10
-  m_Name: shuttle_door
+  m_Name: shuttle_door_disassembly
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: b1a3828ad8b2f1c469ca6a4b8929e8ce, type: 3}
+  m_Sprite: {fileID: 3223517324836888609, guid: 212cfa51cb5119a43b050f19dcce132e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -127,7 +126,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialIntegrity: 100
   soundOnHit: {fileID: 0}
---- !u!114 &-6466032925134522295
+--- !u!114 &5756004421785252263
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -136,46 +135,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 3589734689730788311}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ee89774e9ef62c244bbd6c8a65ca4be7, type: 3}
+  m_Script: {fileID: 11500000, guid: 8396eb7324179904e96c77141bafc812, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spritesWall:
+  - {fileID: 3223517324836888609, guid: 212cfa51cb5119a43b050f19dcce132e, type: 3}
+  - {fileID: 1109344117287743807, guid: 212cfa51cb5119a43b050f19dcce132e, type: 3}
+  - {fileID: -867329510929051524, guid: 212cfa51cb5119a43b050f19dcce132e, type: 3}
+  - {fileID: 4474216901853545502, guid: 212cfa51cb5119a43b050f19dcce132e, type: 3}
+  - {fileID: 8909694240320529256, guid: 212cfa51cb5119a43b050f19dcce132e, type: 3}
+  - {fileID: -829163817568678906, guid: 212cfa51cb5119a43b050f19dcce132e, type: 3}
+  countSprite: 0
+  objectWhenEndDisassebly: {fileID: 3589734689730788311, guid: 91ff4ec03d4cc034db698bc44ae4cd1e, type: 3}
+--- !u!114 &-4608299578847478550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3589734689730788311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddcb46d18b40b1c468aa6f3138f96566, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tilesArray: {fileID: 0}
   tilePlace: {x: 0, y: 0}
   isBlockGas: 1
-  objectWhenDisassembly: {fileID: 3589734689730788311, guid: a11477151b4351c4bb293ab24df34533, type: 3}
+  objectWhenDisassembly: {fileID: 0}
   current_building_type: 3
   isNeedToDestroy: 0
   isNeedToComplete: 0
-  isOpen: 0
-  speedAnimation: 1
---- !u!114 &2131742223534186287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3589734689730788311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 440d1cc3240741c489e42e56fac53e08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!95 &2532607812588440597
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3589734689730788311}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 822469614d4a86b43a073e9bbf7e8118, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0

@@ -48,6 +48,9 @@ MonoBehaviour:
   tilePlace: {x: 0, y: 0}
   isBlockGas: 1
   objectWhenDisassembly: {fileID: 3589734689730788311, guid: b235d15249f588d41968396a6d9c0156, type: 3}
+  current_building_type: 1
+  isNeedToDestroy: 0
+  isNeedToComplete: 0
 --- !u!114 &5970542477104857518
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -82,6 +82,7 @@ GameObject:
   - component: {fileID: 8412355545263985699}
   - component: {fileID: 1923952716525308333}
   - component: {fileID: 6384532610424579049}
+  - component: {fileID: 8555961577308264513}
   - component: {fileID: 7533176550456192789}
   - component: {fileID: 4776416568413999923}
   - component: {fileID: 6918496687933864264}
@@ -174,8 +175,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 522ed31282ff80d43a9518db8f79ceac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ruleTileLatice: {fileID: 0}
-  ruleTileWall: {fileID: 0}
+  health: 100
+  healthMax: 100
+  tilesArray: {fileID: 0}
+--- !u!114 &8555961577308264513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4664782135832244671}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5dda8c2ac7c4374ca6fc0952642312b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ruleTileLatice: {fileID: 11400000, guid: c6ab8b35130bd0240834c7a1d7f49758, type: 2}
+  ruleTileWall: {fileID: 11400000, guid: 96eb0a02e02379d47805bf8fdc195df0, type: 2}
+  ruleTileWindow: {fileID: 11400000, guid: 5aef5c471a20afb479ff1e04fbefc7cb, type: 2}
+  gameObjectDoor: {fileID: 3589734689730788311, guid: 75c34898a3e73a44dbd4eeacece7230a, type: 3}
+  LCMode: 0
+  current_build_type: 0
+  isDebugMode: 1
+  tilesArray: {fileID: 0}
 --- !u!114 &7533176550456192789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -202,6 +224,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d02eeebdd360f214694cd1f519b4a9b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthImage: {fileID: 0}
+  healthText: {fileID: 0}
+  canvasDebug: {fileID: 0}
+  visualGasImage: {fileID: 0}
+  canvasMouseRadiusVisual: {fileID: 0}
 --- !u!114 &6918496687933864264
 MonoBehaviour:
   m_ObjectHideFlags: 0

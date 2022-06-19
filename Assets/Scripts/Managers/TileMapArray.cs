@@ -331,7 +331,20 @@ public class TileMapArray : MonoBehaviour
     /// </summary>
     public void TileRemove(Vector3Int positionTile, Vector3Int place, int tileMapNumber)
     {
-        map[tileMapNumber].SetTile(positionTile, null); //убирание тайла стены и его GameObject
+        if (tileMapNumber == (int)TileMapType.doors)
+        {
+            //Debug.Log("Найден: " + tilesDoor[place.x, place.y].name);
+            Destroy(tilesDoor[place.x, place.y]);
+            //включаем дым под тайлом если он есть
+            if (tilesGas[place.x, place.y].smokeObject.activeInHierarchy == false)
+            {
+                tilesGas[place.x, place.y].DeactivateBlockGas();
+            }
+        }
+        else
+        {
+            map[tileMapNumber].SetTile(positionTile, null); //убирание тайла стены и его GameObject
+        }
 
         if (tileMapNumber == (int)TileMapType.blocks)
         {
@@ -341,6 +354,30 @@ public class TileMapArray : MonoBehaviour
             {
                 tilesGas[place.x, place.y].DeactivateBlockGas();
             }
+        }
+    }
+
+    /// <summary>
+    /// Добавление нового объекта в матрицу
+    /// </summary>
+    public void GameObjectAdd(Vector3Int position, int tileMapNumber)
+    {
+        foreach (Transform c_object in map[tileMapNumber].transform)
+        {
+            //позиция тайла из матрицы
+            Vector2Int tilePosition = new Vector2Int((int)(c_object.position.x + Mathf.Abs(bounds.xMin)),
+                                                     (int)(c_object.position.y + Mathf.Abs(bounds.yMin)));
+
+            //проверяем схожа ли позиция найденного тайла с искомым тайлом, если нет, то продолжаем искать
+            if (tilePosition != ((Vector2Int)position))
+            {
+                continue;
+            }
+
+            //Получаем объект и заносим его в нужный массив
+            TileCheckMapAndAddToMatrix(tilePosition.x, tilePosition.y, tileMapNumber, c_object);
+            Debug.Log($"В матрицу добавлен тайл {c_object.name}");
+            break;
         }
     }
 

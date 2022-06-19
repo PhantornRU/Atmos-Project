@@ -11,6 +11,7 @@ public class TileBlock : TileObject
     [Header("Тайловые данные")]
     public bool isBlockGas = true;
     public GameObject objectWhenDisassembly;
+    public BuildingType current_building_type;
 
     [HideInInspector] public bool isNeedToDestroy = false;
     [HideInInspector] public bool isNeedToComplete = false;
@@ -110,5 +111,12 @@ public class TileBlock : TileObject
         DeactivateBlockGas();
 
         base.ActivateBeforeDestroyed();
+    }
+    public enum BuildingType
+    {
+        None,
+        Wall,
+        Window,
+        Door
     }
 }

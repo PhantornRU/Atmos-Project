@@ -149,6 +149,7 @@ MonoBehaviour:
   - {fileID: -4328859820699690655, guid: 2ec414fac71003e4b93920692ed5841a, type: 3}
   - {fileID: 7620529643772905413, guid: 2ec414fac71003e4b93920692ed5841a, type: 3}
   - {fileID: -2418319651598864637, guid: 2ec414fac71003e4b93920692ed5841a, type: 3}
+  countSprite: 0
   objectWhenEndDisassebly: {fileID: 3589734689730788311, guid: 3813c3cca1246f846aacd791c3ff4da9, type: 3}
 --- !u!114 &-4608299578847478550
 MonoBehaviour:
@@ -166,3 +167,6 @@ MonoBehaviour:
   tilePlace: {x: 0, y: 0}
   isBlockGas: 1
   objectWhenDisassembly: {fileID: 0}
+  current_building_type: 1
+  isNeedToDestroy: 0
+  isNeedToComplete: 0

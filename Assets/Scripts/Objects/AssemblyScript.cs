@@ -29,9 +29,18 @@ public class AssemblyScript : MonoBehaviour
         //при первом запуске, удаляем под-тайл тайлмапы
         if (countSprite == 0)
         {
+            TileBlock tileDoor = GetComponent<TileDoor>();
             TileBlock tileBlock = GetComponent<TileBlock>();
             TileMapArray tilesArray = tileBlock.tilesArray;
-            int c_map = (int)TileMapArray.TileMapType.blocks;
+            int c_map; 
+            if (tileDoor)
+            {
+                c_map = (int)TileMapArray.TileMapType.doors;
+            }
+            else
+            {
+                c_map = (int)TileMapArray.TileMapType.blocks;
+            }
             Vector3Int tilePosition = new Vector3Int((int)(tilesArray.transform.position.x + tileBlock.tilePlace.x - Mathf.Abs(tilesArray.bounds.xMin)),
                                                              (int)(tilesArray.transform.position.y + tileBlock.tilePlace.y - Mathf.Abs(tilesArray.bounds.yMin)), 0);
             tilesArray.TileRemove(tilePosition, (Vector3Int)tileBlock.tilePlace, c_map);
