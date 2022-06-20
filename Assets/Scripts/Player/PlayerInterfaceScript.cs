@@ -109,7 +109,10 @@ public class PlayerInterfaceScript : MonoBehaviour
         Vector3 redV = new Vector3(255f, 0, 0);
         Vector3 colorV = Vector3.Lerp(redV, greenV, current_health/max_health);
         saveColor = new Color32((byte)colorV.x, (byte)colorV.y, (byte)colorV.z, (byte)255f);
-        healthImage.color = saveColor;
+        if (!isNeedBlinkHealth) //если не мигает, то идет обновление цвета, иначе обновление цвета идет во время мигания
+        {
+            healthImage.color = saveColor;
+        }
     }
 
 
