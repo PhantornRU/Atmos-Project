@@ -240,7 +240,6 @@ public class PlayerBuilderScript : MonoBehaviour
                                 tilesArray.tilesDoor[clickTilePlacePosition.x, clickTilePlacePosition.y].Assamble();
                                 if (tilesArray.tilesDoor[clickTilePlacePosition.x, clickTilePlacePosition.y].isNeedToComplete)
                                 {
-                                    int c_map = (int)TileMapArray.TileMapType.doors;
                                     Debug.Log($"Создания тайла по: [clickTilePlacePosition:{clickTilePlacePosition}, clickTileArrayPosition:{clickTileArrayPosition}]");
                                     Destroy(tilesArray.tilesDoor[clickTilePlacePosition.x, clickTilePlacePosition.y].gameObject);
                                     CreateDoor(clickTilePlacePosition, clickTileArrayPosition, gameObjectDoor);
@@ -251,7 +250,6 @@ public class PlayerBuilderScript : MonoBehaviour
                                 tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].Assamble();
                                 if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].isNeedToComplete)
                                 {
-                                    int c_map = (int)TileMapArray.TileMapType.blocks;
                                     Debug.Log($"Создания тайла по: [clickTilePlacePosition:{clickTilePlacePosition}, clickTileArrayPosition:{clickTileArrayPosition}]");
                                     curBuildType = tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].current_building_type;
                                     Destroy(tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].gameObject);

@@ -37,7 +37,7 @@ public class TilePipeNetwork : MonoBehaviour
         tilesArray = FindObjectOfType<TileMapArray>().GetComponent<TileMapArray>();
     }
 
-    private float checkDifferentGas = 5.0f;
+    private float checkDifferentGas = 5f;
 
     public void UpdatePipeNetwork()
     {

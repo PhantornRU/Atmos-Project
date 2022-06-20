@@ -33,6 +33,33 @@ public class PlayerInterfaceScript : MonoBehaviour
         {
             ToggleDebug();
         }
+
+        cur_time_blink = timeBlinkHealthIcon;
+    }
+
+    Color32 saveColor;
+    float timeBlinkHealthIcon = 1.5f;
+    float cur_time_blink = 0f;
+    bool isNeedBlinkHealth = false;
+    bool checkHalfBlink = false;
+    private void Update()
+    {
+        //мерцаем иконкой когда мало здоровь€
+        if (isNeedBlinkHealth)
+        {
+            cur_time_blink -= Time.deltaTime;
+            if (cur_time_blink <= 0)
+            {
+                healthImage.color = saveColor;
+                checkHalfBlink = false;
+                cur_time_blink = timeBlinkHealthIcon;
+            }   
+            else if (!checkHalfBlink && cur_time_blink - timeBlinkHealthIcon / 2 <= 0)
+            {
+                healthImage.color = Color.black;
+                checkHalfBlink = true;
+            }
+        }
     }
 
     public void ToggleDebug()
@@ -64,13 +91,25 @@ public class PlayerInterfaceScript : MonoBehaviour
     /// </summary>
     /// <param name="current_health"></param>
     /// <param name="max_health"></param>
-    public void ChangeHealthUI(int current_health, int max_health)
+    public void ChangeHealthUI(float current_health, float max_health)
     {
         healthText.text = $"ќ«:\n{current_health}/{max_health}";
 
-        //healthImage.color = new Color(
-        //    Mathf.Clamp(current_health, ),
-        //    );
+        //указываем что можно мигать изображением здоровь€ при достижении 20% здоровь€
+        if (current_health / max_health <= 0.2)
+        {
+            isNeedBlinkHealth = true;
+        }
+        else
+        {
+            isNeedBlinkHealth = false;
+        }
+
+        Vector3 greenV = new Vector3(0, 255f, 0);
+        Vector3 redV = new Vector3(255f, 0, 0);
+        Vector3 colorV = Vector3.Lerp(redV, greenV, current_health/max_health);
+        saveColor = new Color32((byte)colorV.x, (byte)colorV.y, (byte)colorV.z, (byte)255f);
+        healthImage.color = saveColor;
     }
 
 

@@ -440,46 +440,42 @@ public class TileMapArray : MonoBehaviour
 
     public void TestMethod()
     {
-        //foreach (TileDoor door in FindObjectsOfType<TileDoor>())
+        PlayerController player = FindObjectOfType<PlayerController>();
+        player.Damage(5f);
+
+
+        ////тестовый визуализатор систем труб
+        //Color32 testColor = new Color32();
+        //int testCount = 0;
+        //int colValue = 100;
+        //foreach (TilePipeNetwork pipes in pipesNetwork)
         //{
-        //    hashObjects.Add(door.gameObject);
-        //    Debug.Log($"В хеш добавлен объект{ door.name }");
-        //    tilesDoor[1, 1] = door.GetComponent<TileDoor>(); //запоминаем объект в массиве
+        //    //смена цветов
+        //    int colorRGB = colValue * testCount;
+        //    testCount++;
+        //    testColor = new Color32(
+        //        (byte)Mathf.Clamp(colorRGB > 255 ? colorRGB/3 : colorRGB, 0, 255),
+        //        (byte)Mathf.Clamp(colorRGB > 255 ? colorRGB/3 : colorRGB, 0, 255),
+        //        (byte)Mathf.Clamp(colorRGB > 255 ? colorRGB/3 : colorRGB, 0, 255),
+        //        (byte)255);
+        //    foreach (Vector2Int tile in pipes.GetTrueList())
+        //    {
+        //        tilesGas[tile.x, tile.y].smokeObject.GetComponent<SpriteRenderer>().color = testColor;
+        //    }
+
+        //    //Debug.Log(pipes.GetInfo());
+
+        //    string result = $"Окончания для {pipes.key}: ";
+        //    foreach (Vector2Int pipe in pipes.GetEndingPipesTrueList())
+        //    {
+        //        result += $"[{pipe}], ";
+        //    }
+        //    result += $"\n Список всех элементов: ";
+        //    foreach (Vector2Int pipe in pipes.GetTrueList())
+        //    {
+        //        result += $"[{pipe}], ";
+        //    }
+        //    Debug.Log(result);
         //}
-
-
-        //тестовый визуализатор систем труб
-        Color32 testColor = new Color32();
-        int testCount = 0;
-        int colValue = 100;
-        foreach (TilePipeNetwork pipes in pipesNetwork)
-        {
-            //смена цветов
-            int colorRGB = colValue * testCount;
-            testCount++;
-            testColor = new Color32(
-                (byte)Mathf.Clamp(colorRGB > 255 ? colorRGB/3 : colorRGB, 0, 255),
-                (byte)Mathf.Clamp(colorRGB > 255 ? colorRGB/3 : colorRGB, 0, 255),
-                (byte)Mathf.Clamp(colorRGB > 255 ? colorRGB/3 : colorRGB, 0, 255),
-                (byte)255);
-            foreach (Vector2Int tile in pipes.GetTrueList())
-            {
-                tilesGas[tile.x, tile.y].smokeObject.GetComponent<SpriteRenderer>().color = testColor;
-            }
-
-            //Debug.Log(pipes.GetInfo());
-
-            string result = $"Окончания для {pipes.key}: ";
-            foreach (Vector2Int pipe in pipes.GetEndingPipesTrueList())
-            {
-                result += $"[{pipe}], ";
-            }
-            result += $"\n Список всех элементов: ";
-            foreach (Vector2Int pipe in pipes.GetTrueList())
-            {
-                result += $"[{pipe}], ";
-            }
-            Debug.Log(result);
-        }
     }
 }

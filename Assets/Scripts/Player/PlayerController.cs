@@ -63,10 +63,12 @@ public class PlayerController : MonoBehaviour, IDamageable<float>
 
     public void Damage(float damageTaken)
     {
-        Debug.Log($"Объект {name} получит повреждение в количестве: {damageTaken}");
 
-        health = Mathf.Clamp(health - (int)damageTaken, 0, healthMax);
+        health -= (int)damageTaken;
+        health = Mathf.Clamp(health, 0, healthMax);
 
         playerInterface.ChangeHealthUI(health, healthMax);
+
+        Debug.Log($"Объект {name} получит повреждение в количестве: {damageTaken}, текущее здоровье: {health}/{healthMax}");
     }
 }
