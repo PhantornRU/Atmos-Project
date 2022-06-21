@@ -68,6 +68,11 @@ public class PlayerInterfaceScript : MonoBehaviour
         canvasDebug.gameObject.SetActive(playerBuilder.isDebugMode);
     }
 
+    public void ToggleLight()
+    {
+        playerBuilder.tilesArray.ToggleLight();
+    }
+
     public void ToggleGasVisualize()
     {
         playerBuilder.tilesArray.ToggleVisual();

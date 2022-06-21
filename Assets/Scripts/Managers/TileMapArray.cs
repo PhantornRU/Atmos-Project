@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 //В принципе можно создать матрицу где и буду храниться все данные и заменять тайлы через тайл мап,
@@ -58,6 +59,27 @@ public class TileMapArray : MonoBehaviour
 
         isInitializeCompleted = true;
     }
+
+    public Light2D globalLight;
+    [HideInInspector] public bool isLight = false;
+    public void ToggleLight()
+    {
+        isLight = !isLight;
+        foreach (Light2D light in FindObjectsOfType<Light2D>())
+        {
+            light.intensity = isLight ? 0f : 0.5f;
+            if (light.GetComponentInParent<MobController>() || light.GetComponentInParent<PlayerController>())
+            {
+                light.intensity = isLight ? 0.5f : 0.65f;
+            }
+            else if (light.GetComponentInParent<DamageTriggerZone>())
+            {
+                light.intensity = isLight ? 0.25f : 0.5f;
+            }
+        }
+        globalLight.intensity = isLight ? 1f : 0.15f;
+    }
+
 
     [HideInInspector] public bool isUpdateVisual = true;
 
