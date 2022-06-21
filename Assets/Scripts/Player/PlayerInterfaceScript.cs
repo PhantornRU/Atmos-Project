@@ -120,14 +120,20 @@ public class PlayerInterfaceScript : MonoBehaviour
     public void SetWallType()
     {
         playerBuilder.current_build_type = PlayerBuilderScript.BuildType.Wall;
+        playerBuilder.curBuildingType = TileBlock.BuildingType.Wall;
+        playerBuilder.LCMode = PlayerBuilderScript.LeftClickMode.Assembly;
     }
     public void SetWindowType()
     {
         playerBuilder.current_build_type = PlayerBuilderScript.BuildType.Window;
+        playerBuilder.curBuildingType = TileBlock.BuildingType.Window;
+        playerBuilder.LCMode = PlayerBuilderScript.LeftClickMode.Assembly;
     }
     public void SetDoorType()
     {
         playerBuilder.current_build_type = PlayerBuilderScript.BuildType.Door;
+        playerBuilder.curBuildingType = TileBlock.BuildingType.Door;
+        playerBuilder.LCMode = PlayerBuilderScript.LeftClickMode.Assembly;
     }
 
     //==============Моды для включения на кнопках==============

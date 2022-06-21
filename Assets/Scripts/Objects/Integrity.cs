@@ -7,7 +7,7 @@ public class Integrity : MonoBehaviour
     [Tooltip("This object's initial \"HP\"")]
     public float initialIntegrity = 100f;
     public float integrity { get; private set; } = 100f;
-    private bool destroyed = false;
+    //private bool destroyed = false;
     //private DamageType lastDamageType;
 
     //[PrefabModeOnly]

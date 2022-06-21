@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class DamageTriggerZone : MonoBehaviour
 {
-    public float damage = 1f;
+    public int damage = 1;
     public int timeSecondsBeforeDamageAgain = 2;
     float cur_time;
 
-
-
     private void OnTriggerStay2D(Collider2D collision)
     {
-        IDamageable<float> damageable = collision.GetComponent<IDamageable<float>>();
+        IDamageable<int> damageable = collision.GetComponent<IDamageable<int>>();
         //PlayerController test = collision.GetComponent<PlayerController>();
 
         cur_time -= Time.deltaTime;
@@ -22,6 +20,6 @@ public class DamageTriggerZone : MonoBehaviour
             cur_time = timeSecondsBeforeDamageAgain;
         }
 
-        Debug.Log("В зоне триггера: " + name);
+        //Debug.Log("В зоне триггера: " + name);
     }
 }

@@ -37,8 +37,6 @@ public class TilePipeNetwork : MonoBehaviour
         tilesArray = FindObjectOfType<TileMapArray>().GetComponent<TileMapArray>();
     }
 
-    private float checkDifferentGas = 5f;
-
     public void UpdatePipeNetwork()
     {
         //обновляем девайсы
@@ -70,6 +68,7 @@ public class TilePipeNetwork : MonoBehaviour
 
         //проверяем давление
         int mark = 0;
+        float checkDifferentGas = 5f;
         if (tile.pressure > pressure + checkDifferentGas)
         {
             mark = -1;

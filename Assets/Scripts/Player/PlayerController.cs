@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [DisallowMultipleComponent]
-public class PlayerController : MonoBehaviour, IDamageable<float>
+public class PlayerController : MonoBehaviour, IDamageable<int>
 {
     [Header("Параметры игрока")]
     [Min(0)] public int health = 100;
@@ -61,14 +61,24 @@ public class PlayerController : MonoBehaviour, IDamageable<float>
         }
     }
 
-    public void Damage(float damageTaken)
+    public void Damage(int damageTaken)
     {
+        Debug.Log($"Объект {name} получит повреждение в количестве: {damageTaken}, текущее здоровье: {health}/{healthMax}");
 
-        health -= (int)damageTaken;
+        health -= damageTaken;
         health = Mathf.Clamp(health, 0, healthMax);
 
         playerInterface.ChangeHealthUI(health, healthMax);
 
-        Debug.Log($"Объект {name} получит повреждение в количестве: {damageTaken}, текущее здоровье: {health}/{healthMax}");
+        if (health == 0)
+        {
+            Death();
+        }
+
+    }
+
+    void Death()
+    {
+        Debug.Log($"{name} погиб");
     }
 }

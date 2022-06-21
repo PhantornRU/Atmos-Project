@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerTriggerZone : MonoBehaviour
+public class PlayerTriggerCheckObjectsInZone : MonoBehaviour
 {
     PlayerMovement playerMovement;
     public int triggerCount = 0;

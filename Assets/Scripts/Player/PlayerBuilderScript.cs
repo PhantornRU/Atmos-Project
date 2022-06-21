@@ -15,7 +15,7 @@ public class PlayerBuilderScript : MonoBehaviour
     [Header("Текущие режимы и типы")]
     public LeftClickMode LCMode = LeftClickMode.None;
     public BuildType current_build_type = BuildType.None;
-    TileBlock.BuildingType curBuildType = TileBlock.BuildingType.None;
+    public TileBlock.BuildingType curBuildingType = TileBlock.BuildingType.None;
     public bool isDebugMode = true;
 
     //внутренные используемые переменные
@@ -58,6 +58,10 @@ public class PlayerBuilderScript : MonoBehaviour
         CheckTileArray();
     }
 
+    //интервал через которые можно нажимать на наши кнопки
+    private float updateButtonRate = 30f;
+    private float nextTimeToUpdate = 0f;
+
     /// <summary>
     /// Вызываемые функции по нажатию мыши.
     /// </summary>
@@ -80,7 +84,6 @@ public class PlayerBuilderScript : MonoBehaviour
         {
             CheckTileArray();
         }
-
         if (Input.GetKey(KeyCode.Alpha1))
         {
             playerInterface.AssemblyMode();
@@ -251,9 +254,9 @@ public class PlayerBuilderScript : MonoBehaviour
                                 if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].isNeedToComplete)
                                 {
                                     Debug.Log($"Создания тайла по: [clickTilePlacePosition:{clickTilePlacePosition}, clickTileArrayPosition:{clickTileArrayPosition}]");
-                                    curBuildType = tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].current_building_type;
+                                    curBuildingType = tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].current_building_type;
                                     Destroy(tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y].gameObject);
-                                    switch (curBuildType)
+                                    switch (curBuildingType)
                                     {
                                         case (TileBlock.BuildingType.Wall):
                                             {
@@ -268,7 +271,7 @@ public class PlayerBuilderScript : MonoBehaviour
                                         case (TileBlock.BuildingType.Door):
                                             {
                                                 CreateDoor(clickTilePlacePosition, clickTileArrayPosition, gameObjectDoor);
-                                                curBuildType = TileBlock.BuildingType.None;
+                                                curBuildingType = TileBlock.BuildingType.None;
                                                 break;
                                             }
                                     }
@@ -279,18 +282,18 @@ public class PlayerBuilderScript : MonoBehaviour
                             //повторно собираем тайл завершающим нажатием, занося его в массив и задавая ему необходимые данные, иначе сбор невозможен
                             if (tilesArray.tilesBlock[clickTilePlacePosition.x, clickTilePlacePosition.y] == null)
                             {
-                                switch (curBuildType)
+                                switch (curBuildingType)
                                 {
                                     case (TileBlock.BuildingType.Wall):
                                         {
                                             CreateBlock(clickTilePlacePosition, clickTileArrayPosition, ruleTileWall);
-                                            curBuildType = TileBlock.BuildingType.None;
+                                            curBuildingType = TileBlock.BuildingType.None;
                                             break;
                                         }
                                     case (TileBlock.BuildingType.Window):
                                         {
                                             CreateBlock(clickTilePlacePosition, clickTileArrayPosition, ruleTileWindow);
-                                            curBuildType = TileBlock.BuildingType.None;
+                                            curBuildingType = TileBlock.BuildingType.None;
                                             break;
                                         }
                                         //case (TileBlock.BuildingType.Door):

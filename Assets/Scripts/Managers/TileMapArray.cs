@@ -441,7 +441,7 @@ public class TileMapArray : MonoBehaviour
     public void TestMethod()
     {
         PlayerController player = FindObjectOfType<PlayerController>();
-        player.Damage(5f);
+        player.Damage(5);
 
 
         ////тестовый визуализатор систем труб

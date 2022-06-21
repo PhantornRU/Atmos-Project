@@ -25,9 +25,8 @@ public class BreakApartScript : MonoBehaviour
             {
                 foreach (GameObject part in listCreateObjectsAfterBreak)
                 {
-                    GameObject part_object = Instantiate(part);
+                    GameObject part_object = Instantiate(part, transform);
                     part_object.transform.parent = this.transform.parent;
-                    part_object.transform.position = this.transform.position;
                 }
                 Destroy(this.gameObject);
             }
