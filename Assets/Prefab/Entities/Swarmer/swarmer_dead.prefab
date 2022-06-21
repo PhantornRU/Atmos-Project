@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5395613090323331222}
   - component: {fileID: 5395613090323331221}
   - component: {fileID: 5395613090323331220}
+  - component: {fileID: 6873303146799152149}
   m_Layer: 0
   m_Name: swarmer_dead
   m_TagString: Untagged
@@ -52,7 +53,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -138,3 +139,31 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &6873303146799152149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5395613090323331218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 00000000
+  m_ShapePath:
+  - {x: -0.17912117, y: -0.05337143, z: 0}
+  - {x: 0.0015107915, y: -0.15452385, z: 0}
+  - {x: 0.1834574, y: -0.05337143, z: 0}
+  - {x: 0.18345746, y: 0.062044144, z: 0}
+  - {x: 0.0058469996, y: 0.20538092, z: 0}
+  - {x: -0.18345734, y: 0.07505226, z: 0}
+  m_ShapePathHash: -206900595
+  m_Mesh: {fileID: 0}
+  m_InstanceId: 168822

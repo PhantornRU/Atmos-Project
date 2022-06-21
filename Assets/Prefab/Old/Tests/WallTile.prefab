@@ -52,7 +52,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -96,6 +96,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 984848e6f8b13a247a27d27aa6e178ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tilesArray: {fileID: 0}
+  tilePlace: {x: 0, y: 0}
+  isActive: 0
+  isEmpty: 0
+  pressure: 101
+  temperature_K: 297.15
+  concentrate: 0
+  volume: 22.41
+  massGas:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  isNeedSmoke: 1
+  isNeedText: 1
+  smokeObject: {fileID: 0}
+  canvasText: {fileID: 0}
+  textObject: {fileID: 0}
+  countActive: 0
 --- !u!61 &4266393540504495013
 BoxCollider2D:
   m_ObjectHideFlags: 0

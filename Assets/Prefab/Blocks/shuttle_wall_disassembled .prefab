@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -2206187167667039215}
   - component: {fileID: 7756492300939664622}
   - component: {fileID: 5550943129831064551}
+  - component: {fileID: 8976442855774180529}
   m_Layer: 7
   m_Name: 'shuttle_wall_disassembled '
   m_TagString: Untagged
@@ -53,7 +54,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -153,3 +154,33 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &8976442855774180529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3589734689730788311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 00000000
+  m_ShapePath:
+  - {x: -0.3468233, y: -0.24305847, z: 0}
+  - {x: -0.24831918, y: -0.34677753, z: 0}
+  - {x: 0.25294086, y: -0.3418821, z: 0}
+  - {x: 0.3446228, y: -0.24795392, z: 0}
+  - {x: 0.34188217, y: 0.2628232, z: 0}
+  - {x: 0.26062268, y: 0.3449881, z: 0}
+  - {x: -0.2381173, y: 0.3517645, z: 0}
+  - {x: -0.35208404, y: 0.24616444, z: 0}
+  m_ShapePathHash: 402027875
+  m_Mesh: {fileID: 0}
+  m_InstanceId: 174968
