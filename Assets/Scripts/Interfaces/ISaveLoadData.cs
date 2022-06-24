@@ -17,7 +17,13 @@ public interface ISaveLoadData
     /// <summary>
     /// Загрузка данных из строчного JSON формата
     /// </summary>
+    /// <param name="json"></param>
     void Load(string json);
+
+    /// <summary>
+    /// Удаляем объект в связи с его ненадобностью
+    /// </summary>
+    void Delete();
 
     /// <summary>
     /// Данные для преобразования в JSON

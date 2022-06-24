@@ -6,7 +6,7 @@ public class DateDynamicObjects : MonoBehaviour, ISaveLoadData
 {
     Rigidbody2D rb;
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
     }
@@ -41,6 +41,11 @@ public class DateDynamicObjects : MonoBehaviour, ISaveLoadData
         rb.angularVelocity = data.angularVelocity;
 
         Debug.Log($"загрузка: {name}, {transform.localPosition}, {transform.localRotation}, {rb.velocity}, {rb.angularVelocity}");
+    }
+
+    void ISaveLoadData.Delete()
+    {
+        Destroy(this.gameObject);
     }
 
     [Header("Данные сохранения")]

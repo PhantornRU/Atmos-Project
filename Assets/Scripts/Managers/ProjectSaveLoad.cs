@@ -81,21 +81,21 @@ public class ProjectSaveLoad : MonoBehaviour
             // Обновляем объекты и добавляем сохраненные
             foreach (string str in loadArray[i])
             {
-                ISaveLoadData dataForDelete = null;
+                ISaveLoadData dataInterfaceForDelete = null;
                 foreach (ISaveLoadData dataInterface in listInterface)
                 {
                     if (str.Contains($"\"key\":{dataInterface.Key},"))
                     {
                         dataInterface.Load(str);
-                        dataForDelete = dataInterface;
+                        dataInterfaceForDelete = dataInterface;
                         //Debug.Log($"Сравнены {dataInterface} \nи {str}");
                         break;
                     }
                 }
                 //Убираем найденный интерфейс из списка, иначе создаем новый объект
-                if (dataForDelete != null)
+                if (dataInterfaceForDelete != null)
                 {
-                    listInterface.Remove(dataForDelete);
+                    listInterface.Remove(dataInterfaceForDelete);
                 }
                 else
                 {
@@ -121,15 +121,15 @@ public class ProjectSaveLoad : MonoBehaviour
 
         Debug.Log("Загружено: " + result);
 
-
-        // Отображаем оставшиеся объекты не относящиеся к сохранению
+        // Отображаем оставшиеся объекты не относящиеся к сохранению и удаляем их
         result = "";
-        foreach (ISaveLoadData dataInterface in FindObjectsOfType<MonoBehaviour>().OfType<ISaveLoadData>())
+        foreach (ISaveLoadData dataInterface in listInterface)
         {
+            dataInterface.Delete();
             result += $"\n {dataInterface}";
         }
 
-        Debug.Log("Оставшиеся интерфейсы при сортировке: " + result);
+        Debug.Log("Оставшиеся интерфейсы при сортировке отправленные к удалению: " + result);
     }
 
     class AllData

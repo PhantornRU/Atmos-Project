@@ -29,7 +29,7 @@ public class MobController : MonoBehaviour, IDamageable<int>, IActiveable<bool>,
     public GameObject hitEffect;
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
@@ -76,7 +76,6 @@ public class MobController : MonoBehaviour, IDamageable<int>, IActiveable<bool>,
         {
             Death();
         }
-
     }
 
     void Death()
@@ -113,6 +112,7 @@ public class MobController : MonoBehaviour, IDamageable<int>, IActiveable<bool>,
         GameObject effect = Instantiate(hitEffect);
         effect.transform.position = transform.position + vectorToTarget * 0.65f;
     }
+
     string ISaveLoadData.Save()
     {
         //throw new NotImplementedException();
@@ -147,6 +147,11 @@ public class MobController : MonoBehaviour, IDamageable<int>, IActiveable<bool>,
         moveVector = data.moveVector;
 
         Debug.Log($"загрузка: {name}, {transform.localPosition}, {transform.localRotation}, {rb.velocity}, {rb.angularVelocity}");
+    }
+
+    void ISaveLoadData.Delete()
+    {
+        Destroy(this.gameObject);
     }
 
     [Header("Данные сохранения")]

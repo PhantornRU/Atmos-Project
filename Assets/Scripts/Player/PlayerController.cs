@@ -41,7 +41,7 @@ public class PlayerController : MonoBehaviour, IDamageable<int>, IActiveable<boo
         playerInterface.ChangeHealthUI(health, healthMax);
     }
 
-    private void Start()
+    private void Awake()
     {
         //ищем по координатам и провер€ем находитс€ ли объект в радиусе границ одного из доступных тайлЁррей, на случай если этих зон будет несколько
         tilesArray = FindObjectOfType<TileMapArray>().GetComponent<TileMapArray>(); //!!!!!!временна€ заглушка!!!!!!!
@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour, IDamageable<int>, IActiveable<boo
 
     public void Damage(int damageTaken)
     {
-        Debug.Log($"ќбъект {name} получит повреждение в количестве: {damageTaken}, текущее здоровье: {health}/{healthMax}");
+        Debug.Log($"ќбъект {name} получил повреждение в количестве: {damageTaken}, текущее здоровье: {health}/{healthMax}");
 
         health -= damageTaken;
         health = Mathf.Clamp(health, 0, healthMax);
@@ -91,26 +91,25 @@ public class PlayerController : MonoBehaviour, IDamageable<int>, IActiveable<boo
         Debug.Log($"{name} погиб");
     }
 
-    string Save()
+    void ISaveLoadData.Delete()
     {
-        return "";
-    }
-
-    void Load(string json)
-    {
-
+        Death();
     }
 
     string ISaveLoadData.Save()
     {
         //throw new NotImplementedException();
         Data data = new Data();
+
         data.key = key;
         data.name = name;
+
         data.position = transform.localPosition;
         data.rotation = transform.localRotation;
+
         data.velocity = rb.velocity;
         data.angularVelocity = rb.angularVelocity;
+
         data.health = health;
 
         string result = JsonUtility.ToJson(data);
@@ -126,11 +125,15 @@ public class PlayerController : MonoBehaviour, IDamageable<int>, IActiveable<boo
 
         key = data.key;
         name = data.name;
+
         transform.localPosition = data.position;
         transform.localRotation = data.rotation;
+
         rb.velocity = data.velocity;
         rb.angularVelocity = data.angularVelocity;
+
         health = data.health;
+        Damage(health - data.health);
 
         Debug.Log($"загрузка: {name}, {transform.localPosition}, {transform.localRotation}, {rb.velocity}, {rb.angularVelocity}");
     }
