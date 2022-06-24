@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MobController : MonoBehaviour, IDamageable<int>
+public class MobController : MonoBehaviour, IDamageable<int>, IActiveable<bool>, ISaveLoadData
 {
     [Header("Параметры сущности")]
     public int health = 30;
     public int healthMax = 30;
     public float speed = 500f;
     public bool isCanMove = true;
+    public bool isActive = true;
     Rigidbody2D rb;
     Animator animator;
 
@@ -38,22 +39,30 @@ public class MobController : MonoBehaviour, IDamageable<int>
     // Update is called once per frame
     void Update()
     {
-        // Уничтожаем текущий объект если он слишком долго не может двигаться (улетел в космос)
-        if (!isCanMove)
+        if (isActive)
         {
-            cur_time_cant_move -= Time.deltaTime;
-            if (cur_time_cant_move <= 0)
+            // Уничтожаем текущий объект если он слишком долго не может двигаться (улетел в космос)
+            if (!isCanMove)
             {
-                Debug.Log($"Уничтожен {name} при выходе в космос");
-                Destroy(this.gameObject);
+                cur_time_cant_move -= Time.deltaTime;
+                if (cur_time_cant_move <= 0)
+                {
+                    Debug.Log($"Уничтожен {name} при выходе в космос");
+                    Destroy(this.gameObject);
+                }
             }
+
+            animator.SetFloat("horizontal", moveVector.x);
+            animator.SetFloat("vertical", moveVector.y);
+
+            // Толкаем нашего персонажа прилагаемой силой по вектору move
+            rb.AddForce(moveVector * speed * rb.mass * Time.deltaTime, ForceMode2D.Force);
         }
+    }
 
-        animator.SetFloat("horizontal", moveVector.x);
-        animator.SetFloat("vertical", moveVector.y);
-
-        // Толкаем нашего персонажа прилагаемой силой по вектору move
-        rb.AddForce(moveVector * speed * rb.mass * Time.deltaTime, ForceMode2D.Force);
+    public void SetActive(bool _isActive)
+    {
+        isActive = _isActive;
     }
 
     public void Damage(int damageTaken)
@@ -103,5 +112,61 @@ public class MobController : MonoBehaviour, IDamageable<int>
     {
         GameObject effect = Instantiate(hitEffect);
         effect.transform.position = transform.position + vectorToTarget * 0.65f;
+    }
+    string ISaveLoadData.Save()
+    {
+        //throw new NotImplementedException();
+        Data data = new Data();
+        data.key = key;
+        data.name = name;
+        data.position = transform.localPosition;
+        data.rotation = transform.localRotation;
+        data.velocity = rb.velocity;
+        data.angularVelocity = rb.angularVelocity;
+        data.health = health;
+        data.moveVector = moveVector;
+
+        string result = JsonUtility.ToJson(data);
+
+        //Debug.Log("Сохранение: " + result);
+
+        return result;
+    }
+
+    void ISaveLoadData.Load(string json)
+    {
+        Data data = JsonUtility.FromJson<Data>(json);
+
+        key = data.key;
+        name = data.name;
+        transform.localPosition = data.position;
+        transform.localRotation = data.rotation;
+        rb.velocity = data.velocity;
+        rb.angularVelocity = data.angularVelocity;
+        health = data.health;
+        moveVector = data.moveVector;
+
+        Debug.Log($"загрузка: {name}, {transform.localPosition}, {transform.localRotation}, {rb.velocity}, {rb.angularVelocity}");
+    }
+
+    [Header("Данные сохранения")]
+    [Tooltip("Ключ сохранения, уникальный для объекта и != 0")]
+    public int key = 0;
+    public int Key { get => key; set => Key = key; }
+
+    class Data
+    {
+        public int key;
+        public string name;
+
+        public Vector2 position;
+        public Quaternion rotation;
+
+        public Vector2 velocity;
+        public float angularVelocity;
+
+        public Vector2 moveVector;
+
+        public int health;
     }
 }

@@ -249,6 +249,7 @@ MonoBehaviour:
   healthMax: 30
   speed: 250
   isCanMove: 1
+  isActive: 1
   moveVector: {x: 0, y: 0}
   gameObjectCreateAfterDeath: {fileID: 5395613090323331218, guid: fba4caabb2b55e549be84cc3c2cb8086, type: 3}
   timeSecondsBeforeDeathIfCantMove: 10
@@ -256,6 +257,7 @@ MonoBehaviour:
   damage: 5
   timeSecondsBeforeDamageAgain: 3
   hitEffect: {fileID: 3235471608668206582, guid: bedabc9ac248600458096d4e3152183c, type: 3}
+  key: 2
 --- !u!114 &361851599736217961
 MonoBehaviour:
   m_ObjectHideFlags: 0

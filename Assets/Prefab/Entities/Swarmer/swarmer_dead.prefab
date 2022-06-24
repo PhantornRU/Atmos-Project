@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5395613090323331221}
   - component: {fileID: 5395613090323331220}
   - component: {fileID: 6873303146799152149}
+  - component: {fileID: -6874695984505160558}
   m_Layer: 0
   m_Name: swarmer_dead
   m_TagString: Untagged
@@ -167,3 +168,16 @@ MonoBehaviour:
   m_ShapePathHash: -206900595
   m_Mesh: {fileID: 0}
   m_InstanceId: 168822
+--- !u!114 &-6874695984505160558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5395613090323331218}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a982854461a0b54c923aa7853e13dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 3

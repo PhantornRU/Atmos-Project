@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     PlayerAnimator playerAnimator;
+    PlayerController playerController;
 
     //внутренные используемые переменные
     Camera mainCamera;
@@ -22,6 +23,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void Initialize()
     {
+        playerController = GetComponent<PlayerController>();
+
         mainCamera = Camera.main;
         rb = GetComponent<Rigidbody2D>();
 
@@ -35,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         //ѕроводимые операции если скрипт был обработан
-        if (isInitialized)
+        if (isInitialized && playerController.isActive)
         {
             horizontal = Input.GetAxis("Horizontal");
             vertical = Input.GetAxis("Vertical");

@@ -126,31 +126,6 @@ public class TileGas : TileObject
                     VisualUpdate(isNeedVisual);
                 }
             }
-            //Вакуум. Уничтожаем газ пустыми тайлами из внутреннего массива !!!!!!НЕКОРРЕКТНО РАБОТАЕТ, НУЖНО ПЕРЕДЕЛАТЬ ПРОВЕРКИ!!!!
-            for (int num = 0; num < massGas.Length; num++)
-            {
-                if ((massGas[num] == null) //null также относится к missing ссылки на объект.
-                    && tilesArray.tilesBlock[massGas[num].tilePlace.x, tilePlace.y] == null
-                    && tilesArray.tilesDoor[massGas[num].tilePlace.x, tilePlace.y] == null
-                    )
-                {
-                    //Debug.Log($"Изменен тайл {massGas[num].tilePlace}, давление {massGas[num].pressure}");
-                    //speedChange = (float)(1.414 * Mathf.Sqrt(pressure - massGas[num].pressure)) * tick_time * Time.deltaTime;
-                    float speedPressureChange = SpeedPressureChange(massGas[num].pressure, tick_time);
-                    pressure -= speedPressureChange;
-
-                    float speedTemperatureChange = SpeedTemperatureChange(massGas[num].temperature_K, tick_time);
-                    temperature_K -= speedTemperatureChange;
-
-                    countActive++;
-
-                    //Обновляем визуализаторы
-                    VisualUpdate(isNeedVisual);
-
-                    //Толкаем объекты на тайле
-                    PushAffectedBodies(num, tick_time, speedPressureChange);
-                }
-            }
             //деактивируем тайл газа т.к. он больше никому не передает.
             if (countActive == 0)
             {   
@@ -163,6 +138,9 @@ public class TileGas : TileObject
     {
         //if (volume)
         pressure += _pressure;
+        //Mathf.Clamp(pressure, 0, 50000); //!!!Тестовый!!!
+        temperature_K += _temperature_K;
+        //Mathf.Clamp(temperature_K, 0, 50000); //!!!Тестовый!!!
         TileChanged();
 
         if (isEmpty && _pressure > 0)
@@ -226,7 +204,7 @@ public class TileGas : TileObject
         }
     }
 
-    bool CheckGasBlock(int x, int y)
+    public bool CheckGasBlock(int x, int y)
     {
         return tilesArray.tilesBlock[x, y] != null && tilesArray.tilesBlock[x, y].isBlockGas
             || tilesArray.tilesDoor[x, y] != null && tilesArray.tilesDoor[x, y].isBlockGas;

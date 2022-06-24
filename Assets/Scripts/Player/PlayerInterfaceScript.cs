@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Experimental.Rendering.Universal;
 
 public class PlayerInterfaceScript : MonoBehaviour
 {
-    //PlayerController playerController;
+    PlayerController playerController;
     PlayerBuilderScript playerBuilder;
 
     [Header("Визуализация здоровья")]
@@ -20,7 +21,7 @@ public class PlayerInterfaceScript : MonoBehaviour
 
     private void Start()
     {
-        //playerController = GetComponent<PlayerController>();
+        playerController = GetComponent<PlayerController>();
         playerBuilder = GetComponent<PlayerBuilderScript>();
 
         //Изначально отключаем если они включены
@@ -45,7 +46,7 @@ public class PlayerInterfaceScript : MonoBehaviour
     private void Update()
     {
         //мерцаем иконкой когда мало здоровья
-        if (isNeedBlinkHealth)
+        if (isNeedBlinkHealth && playerController.isActive)
         {
             cur_time_blink -= Time.deltaTime;
             if (cur_time_blink <= 0)
@@ -68,9 +69,25 @@ public class PlayerInterfaceScript : MonoBehaviour
         canvasDebug.gameObject.SetActive(playerBuilder.isDebugMode);
     }
 
+
+    public Light2D globalLight;
+    [HideInInspector] public bool isLight = false;
     public void ToggleLight()
     {
-        playerBuilder.tilesArray.ToggleLight();
+        isLight = !isLight;
+        foreach (Light2D light in FindObjectsOfType<Light2D>())
+        {
+            light.intensity = isLight ? 0f : 0.5f;
+            if (light.GetComponentInParent<MobController>() || light.GetComponentInParent<PlayerController>())
+            {
+                light.intensity = isLight ? 0.5f : 0.65f;
+            }
+            else if (light.GetComponentInParent<DamageTriggerZone>())
+            {
+                light.intensity = isLight ? 0.25f : 0.5f;
+            }
+        }
+        globalLight.intensity = isLight ? 1f : 0.15f;
     }
 
     public void ToggleGasVisualize()

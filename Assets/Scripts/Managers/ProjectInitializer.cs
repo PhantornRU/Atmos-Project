@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
+
 
 public class ProjectInitializer : MonoBehaviour
 {
@@ -73,5 +75,17 @@ public class ProjectInitializer : MonoBehaviour
             }
         }
 
+    }
+
+    public void ChangeStateActive(bool isActive)
+    {
+        isNeedAtmosUpdate = isActive;
+        isNeedUpdateArray = isActive;
+
+        //для всех объектов с интерфейсов IActiveable, устанавливаем активность
+        foreach (IActiveable<bool> activeInterface in FindObjectsOfType<MonoBehaviour>().OfType<IActiveable<bool>>())
+        {
+            activeInterface.SetActive(isActive);
+        }
     }
 }

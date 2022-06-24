@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: -2206187167667039215}
   - component: {fileID: 7756492300939664622}
   - component: {fileID: 5550943129831064551}
+  - component: {fileID: -830043519534837090}
   m_Layer: 7
   m_Name: shuttle_window_disassembled
   m_TagString: Untagged
@@ -153,3 +154,16 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &-830043519534837090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3589734689730788311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a982854461a0b54c923aa7853e13dbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  key: 6

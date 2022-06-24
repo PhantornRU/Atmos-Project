@@ -1,8 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering.Universal;
 using UnityEngine.Tilemaps;
 
 //В принципе можно создать матрицу где и буду храниться все данные и заменять тайлы через тайл мап,
@@ -59,27 +59,6 @@ public class TileMapArray : MonoBehaviour
 
         isInitializeCompleted = true;
     }
-
-    public Light2D globalLight;
-    [HideInInspector] public bool isLight = false;
-    public void ToggleLight()
-    {
-        isLight = !isLight;
-        foreach (Light2D light in FindObjectsOfType<Light2D>())
-        {
-            light.intensity = isLight ? 0f : 0.5f;
-            if (light.GetComponentInParent<MobController>() || light.GetComponentInParent<PlayerController>())
-            {
-                light.intensity = isLight ? 0.5f : 0.65f;
-            }
-            else if (light.GetComponentInParent<DamageTriggerZone>())
-            {
-                light.intensity = isLight ? 0.25f : 0.5f;
-            }
-        }
-        globalLight.intensity = isLight ? 1f : 0.15f;
-    }
-
 
     [HideInInspector] public bool isUpdateVisual = true;
 
@@ -349,7 +328,7 @@ public class TileMapArray : MonoBehaviour
         }
     }
     /// <summary>
-    /// Добавление нового тайла в матрицу
+    /// ДУбирание тайла из матрицы
     /// </summary>
     public void TileRemove(Vector3Int positionTile, Vector3Int place, int tileMapNumber)
     {
@@ -363,19 +342,43 @@ public class TileMapArray : MonoBehaviour
                 tilesGas[place.x, place.y].DeactivateBlockGas();
             }
         }
-        else
+        else if (tileMapNumber == (int)TileMapType.blocks)
         {
             map[tileMapNumber].SetTile(positionTile, null); //убирание тайла стены и его GameObject
-        }
-
-        if (tileMapNumber == (int)TileMapType.blocks)
-        {
             map[tileMapNumber].GetComponent<TilemapCollider2D>().ProcessTilemapChanges(); //Обновляем тайлмап коллайдер
+
             //включаем дым под тайлом если он есть
             if (tilesGas[place.x, place.y].smokeObject.activeInHierarchy == false)
             {
-                tilesGas[place.x, place.y].DeactivateBlockGas();
+                tilesBlock[place.x, place.y].DeactivateBlockGas();
             }
+        }
+        else if (tileMapNumber == (int)TileMapType.floor)
+        {
+            for (int i = place.x - 1; i <= place.x + 1; i++)
+            {
+                for (int j = place.y - 1; j <= place.y + 1; j++)
+                {
+                    //tilesGas[place.x, place.y].
+                    try
+                    {
+                        if (tilesGas[i, j] != null
+                            && !tilesGas[place.x, place.y].CheckGasBlock(i, j)
+                            && (Vector2Int)place != new Vector2Int(i, j))
+                        {
+                            tilesGas[i, j].pressure = 0;
+                            tilesGas[i, j].TransmissionGas(tick_time, true);
+                            //tilesGas[i, j].UpdateGas(-300, 0);
+                            //UpdateTileMaps();
+                        }
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+                }
+            }
+            map[tileMapNumber].SetTile(positionTile, null); //убираем тайл пола
         }
     }
 
@@ -462,8 +465,11 @@ public class TileMapArray : MonoBehaviour
 
     public void TestMethod()
     {
-        PlayerController player = FindObjectOfType<PlayerController>();
-        player.Damage(5);
+        FindObjectOfType<ProjectSaveLoad>().SaveAllData();
+        FindObjectOfType<ProjectSaveLoad>().LoadAllData();
+
+        //PlayerController player = FindObjectOfType<PlayerController>();
+        //player.Damage(5);
 
 
         ////тестовый визуализатор систем труб

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 
 [DisallowMultipleComponent]
-public class PlayerController : MonoBehaviour, IDamageable<int>
+public class PlayerController : MonoBehaviour, IDamageable<int>, IActiveable<bool>, ISaveLoadData
 {
     [Header("Параметры игрока")]
     [Min(0)] public int health = 100;
@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour, IDamageable<int>
 
     //внутренные используемые переменные
     Camera mainCamera;
+    Rigidbody2D rb;
 
     // параметры и скрипты игрока
     PlayerMovement playerMovement;
@@ -26,6 +27,8 @@ public class PlayerController : MonoBehaviour, IDamageable<int>
     public void Initialize()
     {
         mainCamera = Camera.main;
+
+        rb = GetComponent<Rigidbody2D>();
 
         playerMovement = GetComponent<PlayerMovement>();
         playerMovement.Initialize();
@@ -49,7 +52,7 @@ public class PlayerController : MonoBehaviour, IDamageable<int>
 
     private void Update()
     {
-        if (isInitialized)
+        if (isInitialized && isActive)
         {
             //Методы нажатия на ЛКМ и ПКМ
             tick_curr_time -= Time.deltaTime; // Вычитаем время кадра
@@ -59,6 +62,12 @@ public class PlayerController : MonoBehaviour, IDamageable<int>
                 playerBuilder.ButtonsFunctions();
             }
         }
+    }
+
+    public bool isActive = true;
+    public void SetActive(bool _isActive)
+    {
+        isActive = _isActive;
     }
 
     public void Damage(int damageTaken)
@@ -80,5 +89,68 @@ public class PlayerController : MonoBehaviour, IDamageable<int>
     void Death()
     {
         Debug.Log($"{name} погиб");
+    }
+
+    string Save()
+    {
+        return "";
+    }
+
+    void Load(string json)
+    {
+
+    }
+
+    string ISaveLoadData.Save()
+    {
+        //throw new NotImplementedException();
+        Data data = new Data();
+        data.key = key;
+        data.name = name;
+        data.position = transform.localPosition;
+        data.rotation = transform.localRotation;
+        data.velocity = rb.velocity;
+        data.angularVelocity = rb.angularVelocity;
+        data.health = health;
+
+        string result = JsonUtility.ToJson(data);
+
+        //Debug.Log("Сохранение: " + result);
+
+        return result;
+    }
+
+    void ISaveLoadData.Load(string json)
+    {
+        Data data = JsonUtility.FromJson<Data>(json);
+
+        key = data.key;
+        name = data.name;
+        transform.localPosition = data.position;
+        transform.localRotation = data.rotation;
+        rb.velocity = data.velocity;
+        rb.angularVelocity = data.angularVelocity;
+        health = data.health;
+
+        Debug.Log($"загрузка: {name}, {transform.localPosition}, {transform.localRotation}, {rb.velocity}, {rb.angularVelocity}");
+    }
+
+    [Header("Данные сохранения")]
+    [Tooltip("Ключ сохранения, уникальный для объекта и != 0")]
+    public int key = 0;
+    public int Key { get => key; set => Key = key; }
+
+    class Data
+    {
+        public int key;
+        public string name;
+
+        public Vector2 position;
+        public Quaternion rotation;
+
+        public Vector2 velocity;
+        public float angularVelocity;
+
+        public int health;
     }
 }

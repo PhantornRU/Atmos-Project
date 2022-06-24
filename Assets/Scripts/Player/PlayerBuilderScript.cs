@@ -59,8 +59,8 @@ public class PlayerBuilderScript : MonoBehaviour
     }
 
     //интервал через которые можно нажимать на наши кнопки
-    private float updateButtonRate = 30f;
-    private float nextTimeToUpdate = 0f;
+    //private float updateButtonRate = 30f;
+    //private float nextTimeToUpdate = 0f;
 
     /// <summary>
     /// Вызываемые функции по нажатию мыши.
