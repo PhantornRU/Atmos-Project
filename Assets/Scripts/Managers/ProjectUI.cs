@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class ProjectUI : MonoBehaviour
 {
@@ -11,6 +13,12 @@ public class ProjectUI : MonoBehaviour
     public Canvas canvasPause;
     public Canvas canvasGame;
     public Canvas canvasMenuEsc;
+    public Canvas canvasChooseScene;
+
+    [Header("Кнопки")]
+    public Button buttonChooseScene1;
+    public Button buttonChooseScene2;
+    public Button buttonChooseScene3;
 
     private bool isPause = false;
 
@@ -22,7 +30,7 @@ public class ProjectUI : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Pause))
+        if (Input.GetKeyDown(KeyCode.Pause) && !canvasMenuEsc.isActiveAndEnabled && !canvasChooseScene.isActiveAndEnabled)
         {
             Pause();
         }
@@ -44,6 +52,7 @@ public class ProjectUI : MonoBehaviour
     {
         PauseGameTimeAndActive();
         canvasPause.gameObject.SetActive(false);
+        canvasChooseScene.gameObject.SetActive(false);
         canvasMenuEsc.gameObject.SetActive(isPause);
         projectInitializer.ChangeStateActive(!isPause);
     }
@@ -71,9 +80,29 @@ public class ProjectUI : MonoBehaviour
         projectSaveLoad.LoadAllData();
     }
 
-    public void ChooseScene() //!!!доделать!!!
+    public void MenuChooseScene()
     {
-        Debug.LogWarning("Отсутствует выбор сцен");
+        canvasMenuEsc.gameObject.SetActive(false);
+        canvasChooseScene.gameObject.SetActive(true);
+    }
+    public void ButtonChooseScene()
+    {
+        if (buttonChooseScene1.interactable == false)
+        {
+            SceneManager.LoadScene(0);
+        }
+        else if (buttonChooseScene2.interactable == false)
+        {
+            SceneManager.LoadScene(1);
+        }
+        else if (buttonChooseScene3.interactable == false)
+        {
+            SceneManager.LoadScene(2);
+        }
+        else
+        {
+            Debug.LogWarning("Не выбрана сцена для загрузки");
+        }
     }
 
     public void Exit()

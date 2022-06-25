@@ -6,6 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/Ship Empty Scene.unity
+    guid: 21026ead623b81244ba912882a22caf6
+  - enabled: 1
+    path: Assets/Scenes/Ship Full Scene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Ship Medium Scene.unity
+    guid: 2367d2532811c9744b0a92d440caf41c
   m_configObjects: {}
