@@ -465,8 +465,9 @@ public class TileMapArray : MonoBehaviour
 
     public void TestMethod()
     {
-        FindObjectOfType<ProjectSaveLoad>().SaveAllData();
-        FindObjectOfType<ProjectSaveLoad>().LoadAllData();
+        //FindObjectOfType<ProjectSaveLoad>().SaveAllData();
+        //FindObjectOfType<ProjectSaveLoad>().LoadAllData();
+
 
         //PlayerController player = FindObjectOfType<PlayerController>();
         //player.Damage(5);

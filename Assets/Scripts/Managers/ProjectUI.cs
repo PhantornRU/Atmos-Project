@@ -87,6 +87,8 @@ public class ProjectUI : MonoBehaviour
     }
     public void ButtonChooseScene()
     {
+        Time.timeScale = 1;
+
         if (buttonChooseScene1.interactable == false)
         {
             SceneManager.LoadScene(0);
