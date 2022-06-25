@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ProjectSaveLoad : MonoBehaviour
 {
-    string path = "/saveFile.json";
+    string path;
+    public int key = 0;
+    public string Path { get => path; set => Path = $"/saveFile{SceneManager.GetActiveScene().name}.json"; }
 
     [Header("Объекты для создания при загрузке")]
     public GameObject[] loadObjects = new GameObject[11];
