@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class MobController : MonoBehaviour, IDamageable<int>, IActiveable<bool>, ISaveLoadData
 {
+    [HideInInspector] public TileMapArray tilesArray;
+
     [Header("Параметры сущности")]
     public int health = 30;
     public int healthMax = 30;
@@ -25,12 +27,12 @@ public class MobController : MonoBehaviour, IDamageable<int>, IActiveable<bool>,
     [Header("Нанесение урона игроку")]
     public int damage = 5;
     public int timeSecondsBeforeDamageAgain = 3;
-    float cur_time_before_damage;
+    public float cur_time_before_damage;
     public GameObject hitEffect;
 
-    // Start is called before the first frame update
     void Awake()
     {
+        tilesArray = FindObjectOfType<TileMapArray>().GetComponent<TileMapArray>();
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
         cur_time_cant_move = timeSecondsBeforeDeathIfCantMove;
@@ -89,25 +91,10 @@ public class MobController : MonoBehaviour, IDamageable<int>, IActiveable<bool>,
         Destroy(this.gameObject);
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        PlayerController damageable = collision.transform.GetComponent<PlayerController>();
-        //PlayerController test = collision.GetComponent<PlayerController>();
-
-        cur_time_before_damage -= Time.deltaTime;
-        if (cur_time_before_damage <= 0 && damageable != null)
-        {
-            damageable.Damage(damage);
-            cur_time_before_damage = timeSecondsBeforeDamageAgain;
-
-            PlayHitAnimation(moveVector);
-        }
-    }
-
     /// <summary>
     /// Анимация удара по чему-либо
     /// </summary>
-    void PlayHitAnimation(Vector3 vectorToTarget)
+    public void PlayHitAnimation(Vector3 vectorToTarget)
     {
         GameObject effect = Instantiate(hitEffect);
         effect.transform.position = transform.position + vectorToTarget * 0.65f;
