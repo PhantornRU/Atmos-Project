@@ -37,7 +37,7 @@ public class ProjectInitializer : MonoBehaviour
             tileMap.Initialize(tick_time);
             tileMapArray.Add(tileMap);
 
-            bounds = tileMap.bounds; //!!! временно, если не будет добавляться дополнительные тайлмапы !!!
+            bounds = tileMap.bounds;
         }
 
         //Инициализируем игрока и его компоненты после тайл мапов
@@ -61,14 +61,13 @@ public class ProjectInitializer : MonoBehaviour
                 }
 
                 //Обновляем девайсы
-                //!!! временно отключен из-за ненадобности !!!
-                //if (isNeedUpdateArray)
-                //{
-                //    foreach (DevicesManager devices in devicesManager)
-                //    {
-                //        devices.UpdateDevices();
-                //    }
-                //}
+                if (isNeedUpdateArray)
+                {
+                    foreach (DevicesManager devices in devicesManager)
+                    {
+                        devices.UpdateDevices();
+                    }
+                }
 
                 tick_curr_time = tick_time; // повторный запуск таймера
                                             //isNeedUpdateArray = true;

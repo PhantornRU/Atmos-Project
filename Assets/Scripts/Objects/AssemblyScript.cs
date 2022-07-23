@@ -7,11 +7,10 @@ using UnityEngine.Tilemaps;
 public class AssemblyScript : MonoBehaviour
 {
     [Header("Спрайты меняющие текущий спрайт при разборке")]
-    public List<Sprite> spritesWall;
-    //[SerializeField] private Sprite defaultSprite;
+    public List<Sprite> sprites;
+
     public int countSprite = 0;
     private int countSpriteMax = 0;
-    //public int countStateWhenTilemapChange = 1;
 
     SpriteRenderer spriteRenderer;
 
@@ -19,7 +18,7 @@ public class AssemblyScript : MonoBehaviour
 
     private void Awake()
     {
-        countSpriteMax = spritesWall.Count;
+        countSpriteMax = sprites.Count;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
@@ -51,7 +50,7 @@ public class AssemblyScript : MonoBehaviour
         if (countSprite < countSpriteMax)
         {
             //Debug.Log($"{name} меняет спрайт на {countSprite}");
-            spriteRenderer.sprite = spritesWall.ElementAt(countSprite);
+            spriteRenderer.sprite = sprites.ElementAt(countSprite);
         }
         else
         {
@@ -73,7 +72,7 @@ public class AssemblyScript : MonoBehaviour
         if (countSprite >= 0)
         {
             Debug.Log($"{name} меняет спрайт на {countSprite}");
-            spriteRenderer.sprite = spritesWall.ElementAt(countSprite);
+            spriteRenderer.sprite = sprites.ElementAt(countSprite);
         }
     }
 

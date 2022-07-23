@@ -27,7 +27,7 @@ public class TileGas : TileObject
     //В 1-м кубометре = 1000 литров.
 
     [Header("Окружные тайлы")]
-    [SerializeField]private TileGas[] massGas = new TileGas[8]; //!!!!!лучше ограничить до 4-ех, а то иначе проходит по диагонали!!!!!!!!!
+    [SerializeField]private TileGas[] massGas = new TileGas[8];
     [Space(height: 10f)]
 
     [Header("Визуализирование")]
@@ -114,9 +114,6 @@ public class TileGas : TileObject
                     float speedTemperatureChange = SpeedTemperatureChange(massGas[num].temperature_K, tick_time);
                     temperature_K -= speedTemperatureChange;
 
-                    //float speedConcentrateChange = SpeedConcentrateChange(massGas[num].temperature_K, tick_time);
-                    //concentrate -= speedConcentrateChange;
-
                     massGas[num].UpdateGas(speedPressureChange, speedTemperatureChange);
                     countActive++;
 
@@ -136,11 +133,8 @@ public class TileGas : TileObject
 
     public void UpdateGas(float _pressure, float _temperature_K)
     {
-        //if (volume)
         pressure += _pressure;
-        //Mathf.Clamp(pressure, 0, 50000); //!!!Тестовый!!!
         temperature_K += _temperature_K;
-        //Mathf.Clamp(temperature_K, 0, 50000); //!!!Тестовый!!!
         TileChanged();
 
         if (isEmpty && _pressure > 0)
@@ -150,11 +144,6 @@ public class TileGas : TileObject
 
         if (temperature_K > 0) //если меньше абсолютного нуля, то не высчитывается
         {
-            //float pressure_delta = (pressure - _pressure) / 2;
-            //float transfer_moles = pressure_delta * volume / (temperature_K * gas_r);
-
-            //Debug.Log(concentrate);
-
             //концентрация веществ в моллях
             concentrate = ConcentrateFormula();
         }
@@ -171,12 +160,6 @@ public class TileGas : TileObject
             isActive = true;
             ActivateNearTiles();
         }
-
-        //Обновляем визуализаторы
-        //VisualUpdate(true);
-
-        //передаем тайл мапу что необходимо провести обновления тайлов
-        //if (!tilesArray.isNeedUpdateArray) tilesArray.isNeedUpdateArray = true;
     }
 
     void VisualUpdate(bool isNeedVisualUpdate)
@@ -215,8 +198,6 @@ public class TileGas : TileObject
     /// </summary>
     public float SpeedPressureChange(float toTilePressureChange, float tick_time)
     {
-        //!!!!!здесь должна быть нормальная формула!!!!
-        //speedChange = (float)(1.414 * Mathf.Sqrt(pressure - massGas[num].pressure)) * tick_time * Time.deltaTime;
         return 1.414f * Mathf.Abs(pressure - toTilePressureChange) * tick_time * Time.deltaTime;
     }
 
@@ -225,8 +206,6 @@ public class TileGas : TileObject
     /// </summary>
     public float SpeedTemperatureChange(float toTileTemperatureChange, float tick_time)
     {
-        //!!!!!здесь должна быть нормальная формула!!!!
-        //speedChange = (float)(1.414 * Mathf.Sqrt(pressure - massGas[num].pressure)) * tick_time * Time.deltaTime;
         return 1.414f * Mathf.Abs(temperature_K - toTileTemperatureChange) * tick_time * Time.deltaTime;
     }
 
@@ -326,7 +305,7 @@ public class TileGas : TileObject
                 }
             }
 
-            //Выставляем цвета через концентрацию от синего до красного, а потом белого. !!Заменить концентрацию на температуру!!
+            //Выставляем цвета через концентрацию от синего до красного, а потом белого.
             smokeSprite.color = new Color32(
                 (byte)Mathf.Clamp(rgbSmoke.x, 0, 255),  //Red
                 (byte)Mathf.Clamp(rgbSmoke.y, 0, 255),  //Green

@@ -152,8 +152,6 @@ public class TileMapArray : MonoBehaviour
                 if (bounds.yMin > c_map.cellBounds.min.y) bounds.yMin = c_map.cellBounds.min.y;
             }
         }
-
-        //!!!!!Примерно такое же должно быть обновление границ, но с переносом всех текущих массивов данных
     }
 
     /// <summary>

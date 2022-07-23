@@ -109,7 +109,6 @@ public class ProjectSaveLoad : MonoBehaviour
             }
         }
 
-
         // Выдаем результат в консоль
         string result = "";
         int m = 0;

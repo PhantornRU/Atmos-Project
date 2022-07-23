@@ -56,11 +56,6 @@ public class PlayerMovement : MonoBehaviour
             mainCamera.transform.localPosition = new Vector3(transform.localPosition.x, transform.localPosition.y, -10);
             playerAnimator.Animate(horizontal, vertical);
 
-            // Поворот осветительной лампы
-            //if (horizontal != 0 || vertical != 0)
-            //{
-            //    lightForwardTransform.localRotation = Quaternion.Euler(0, 0, (int)(Mathf.Atan2(-horizontal, vertical) * 180 / Mathf.PI));
-            //}
             Vector2 mouseInput = GetMousePosition();
             lightForwardTransform.localRotation = Quaternion.Euler(0, 0, (int)(Mathf.Atan2(-mouseInput.x, mouseInput.y) * 180 / Mathf.PI));
         }

@@ -11,11 +11,11 @@ GameObject:
   - component: {fileID: 3589734689730788308}
   - component: {fileID: 3589734689730788309}
   - component: {fileID: 3589734689730788310}
-  - component: {fileID: -2206187167667039215}
   - component: {fileID: -6466032925134522295}
   - component: {fileID: 2131742223534186287}
   - component: {fileID: 2532607812588440597}
   - component: {fileID: 8180884917673650613}
+  - component: {fileID: -2206187167667039215}
   m_Layer: 10
   m_Name: shuttle_door
   m_TagString: Untagged
@@ -114,20 +114,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &-2206187167667039215
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3589734689730788311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c455557227334f348ab6d1adb6de0cf5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  initialIntegrity: 100
-  soundOnHit: {fileID: 0}
 --- !u!114 &-6466032925134522295
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,3 +192,17 @@ MonoBehaviour:
   m_ShapePathHash: 0
   m_Mesh: {fileID: 0}
   m_InstanceId: -1208642
+--- !u!114 &-2206187167667039215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3589734689730788311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c455557227334f348ab6d1adb6de0cf5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  initialIntegrity: 100
+  soundOnHit: {fileID: 0}

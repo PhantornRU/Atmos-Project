@@ -138,7 +138,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8396eb7324179904e96c77141bafc812, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spritesWall:
+  sprites:
   - {fileID: -2033709360937787716, guid: 2ec414fac71003e4b93920692ed5841a, type: 3}
   - {fileID: 3615737495481876378, guid: 2ec414fac71003e4b93920692ed5841a, type: 3}
   - {fileID: -3132608970461097635, guid: 2ec414fac71003e4b93920692ed5841a, type: 3}

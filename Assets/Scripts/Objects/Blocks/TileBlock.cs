@@ -90,7 +90,6 @@ public class TileBlock : TileObject
         if (tilesArray.tilesGas[tilePlace.x, tilePlace.y] != null)
         {
             tilesArray.tilesGas[tilePlace.x, tilePlace.y].DeactivateBlockGas();
-            //tilesArray.tilesGas[tilePlace.x, tilePlace.y].isActive = true;
         }
     }
 
